@@ -1,10 +1,10 @@
 const fs = require('fs')
 const jsonfile = require('jsonfile')
-var cutoff = 1000
 
-function generateFilter(inData, outData, filtData, starts) {
+function generateFilter(inData, outData, filtData, complex) {
     var phrases = []
     var output = {}
+    var cutoff = complex ? 10000 : 1000
 //read and store possible phrases
     fs.readFile(inData, (err, data) => {
         if (err) {
@@ -23,12 +23,12 @@ function generateFilter(inData, outData, filtData, starts) {
             for(let i = 0; i < phrases.length; i++) {
                 console.log('Processing ' + phrases[i])
                 for(let a = 0; a < words.length; a++) {
-                    if(starts) {
-                        if(words[a].startsWith(phrases[i])) {
+                    if(complex) {
+                        if(words[a].includes(phrases[i])) {
                             output[phrases[i]]++
                         }
                     } else {
-                        if(words[a].includes(phrases[i])) {
+                        if(words[a].startsWith(phrases[i])) {
                             output[phrases[i]]++
                         }
                     }
@@ -58,9 +58,9 @@ function generateFilter(inData, outData, filtData, starts) {
 generateFilter('../data/phrases.txt', 
                '../data/phrase-data.json', 
                '../data/valid-phrases.txt',
-               true)
+               false)
 
 generateFilter('../data/dirty-phrases.txt', 
                '../data/dirty-phrase-data.json', 
                '../data/valid-dirty-phrases.txt', 
-               false)
+               true)
