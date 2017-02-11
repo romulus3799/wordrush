@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Word Rush</title>
+        
+        <link rel="stylesheet" href="node_modules/angular-material/angular-material.min.css">
+        <link rel="stylesheet" href="node_modules/mdi/css/materialdesignicons.min.css" media="all" type="text/css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        
+        <script src="node_modules/angular/angular.js"></script>
+        <script src="node_modules/angular-animate/angular-animate.js"></script>
+        <script src="node_modules/angular-aria/angular-aria.js"></script>
+        <script src="node_modules/angular-material/angular-material.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="scripts/app.js"></script>
+        <script src="components/wordrush.fac.js"></script>
+        <script src="components/wordrush.ctr.js"></script>
+    </head>
+    <body ng-app="wordrush" ng-controller="wordrushCtrl">
+        <div id="pregame" ng-show="!gameOn && virgin">
+            <md-button ng-click="startGame()">Start Game</md-button>
+        </div>
+        <div id="interface" ng-show="gameOn && !virgin">
+            <md-content class="md-padding">
+                <h1>Words that {{ wordCondition }}</h1>
+
+                <input 
+                    type="text"  
+                    id="word-input" 
+                    ng-model="applicant"
+                    placeholder="Word" 
+                    ng-keydown="submitWord(applicant);"
+                />
+            </md-content>
+        </div>
+        <div id="postgame" ng-show="!gameOn && !virgin">
+            <p>Total Words: {{ submittedWords.length }}</p>
+            <p>Correct Words: {{ amtCorrect }}</p>
+            <p>{{ submittedDisplay }}</p>
+        </div>
+    </body>
+</html>
