@@ -1,0 +1,1 @@
+This is a high school independent study project. I am making this partly to learn Angular.js and Node.js, and partly to create a game which I have wanted to create for over a year. Previously, I simply did not have the knowledge to do so, but having learnt Angular and Node, I can finally bring my idea to life.
