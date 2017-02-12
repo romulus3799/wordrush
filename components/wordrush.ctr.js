@@ -11,8 +11,14 @@
         wordRushFac.getValidWords().then(words => {
             $scope.words = String(words.data).split(',')
         })
-        wordRushFac.getValidPhrases().then(phrases => {
-            $scope.phrases = String(phrases.data).split(',')
+        wordRushFac.getStartPhrases().then(phrases => {
+            $scope.startPhrases = String(phrases.data).split(',')
+        })
+        wordRushFac.getInPhrases().then(phrases => {
+            $scope.inPhrases = String(phrases.data).split(',')
+        })
+        wordRushFac.getEndPhrases().then(phrases => {
+            $scope.endPhrases = String(phrases.data).split(',')
         })
         wordRushFac.getLetters().then(letters => {
             $scope.letters = String(letters.data).split(',')
@@ -27,6 +33,7 @@
         $scope.condition = {
             name: '',
             startsWith: '',
+            endsWith: '',
             contains: '',
             length: 1,
             containsLetter: '',

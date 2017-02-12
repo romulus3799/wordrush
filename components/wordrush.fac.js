@@ -13,12 +13,28 @@
                 getValidWords : getValidWords
             }
             
-            function getValidPhrases() {
-                return $http.get('../data/valid-phrases.txt');
+            function getStartPhrases() {
+                return $http.get('../data/valid-start-phrases.txt');
             }
 
             return {
-                getValidPhrases : getValidPhrases
+                getStartPhrases : getStartPhrases
+            }
+            
+            function getInPhrases() {
+                return $http.get('../data/valid-in-phrases.txt');
+            }
+
+            return {
+                getInPhrases : getInPhrases
+            }
+            
+            function getEndPhrases() {
+                return $http.get('../data/valid-end-phrases.txt');
+            }
+
+            return {
+                getEndPhrases : getEndPhrases
             }
             
             function getLetters() {
