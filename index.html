@@ -35,8 +35,9 @@
         </div>
         <div id="postgame" ng-show="!gameOn && !virgin">
             <p>Total Words: {{ submittedWords.length }}</p>
-            <p>Correct Words: {{ amtCorrect }}</p>
-            <p>{{ submittedDisplay }}</p>
+            <p>Correct Words: {{ correctWords.length }}</p>
+            <p>{{ correctWords }}</p>
+            <p>{{ incorrectWords }}</p>
         </div>
     </body>
 </html>

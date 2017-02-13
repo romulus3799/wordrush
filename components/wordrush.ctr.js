@@ -20,6 +20,15 @@
         wordRushFac.getEndPhrases().then(phrases => {
             $scope.endPhrases = String(phrases.data).split(',')
         })
+        wordRushFac.getCapPhrases().then(phrases => {
+            var arr = String(phrases.data).split(',')
+            
+            //split each string into an array of chars
+            for(let i = 0; i < arr.length; i++) {
+                arr[i] = [arr[i].charAt(0),arr[i].charAt(1)]
+            }
+            $scope.capPhrases = arr
+        })
         wordRushFac.getLetters().then(letters => {
             $scope.letters = String(letters.data).split(',')
         })
@@ -27,10 +36,12 @@
         $scope.applicant = ''
         $scope.submittedWords = [] 
         $scope.submittedDisplay = ''
-        $scope.amtCorrect = 0
+        $scope.correctWords = []
+        $scope.incorrectWords = []
         
         $scope.condition = {
             name: '',
+            startsAndEnds: false,
             startsWith: '',
             endsWith: '',
             contains: '',
@@ -56,7 +67,8 @@
             
             $scope.applicant = ''
             $scope.submittedWords = []
-            $scope.amtCorrect = 0
+            $scope.correctWords = []
+            $scope.incorrectWords = []
             
             $timeout($scope.endGame, 10000)
         }
@@ -92,8 +104,17 @@
         }
         
         function generateCondition() {
-            $scope.condition.startsWith = randElement($scope.startPhrases)
-            $scope.condition.endsWith = randElement($scope.endPhrases)
+            $scope.condition.startsAndEnds = Math.random() >= .5
+            
+            if($scope.condition.startsAndEnds) {
+                var cap = randElement($scope.capPhrases)
+                $scope.condition.startsWith = randElement(cap[0])
+                $scope.condition.endsWith = randElement(cap[1])
+            } else {
+                $scope.condition.startsWith = randElement($scope.startPhrases)
+                $scope.condition.endsWith = randElement($scope.endPhrases)
+            }
+            
             $scope.condition.contains = randElement($scope.inPhrases)
             $scope.condition.length = randIn(MINLEN, MAXLEN)
             $scope.condition.containsTimes = randIn(MINTIMES, MAXTIMES)
@@ -102,29 +123,36 @@
             
             var lower = 0
             var upper = 2
-            for(let i = 0; i < 2; i++) {
-                
-                //randomly pick type of condition
-                finals = randIn(lower,upper)
-                lower = 3
-                upper = 3
-                
-                //add condition description to name
+            if($scope.condition.startsAndEnds) {
                 $scope.condition.name += 
-                    (finals === 0) ?
-                        'start with "' + $scope.condition.startsWith + '"' :
-                    (finals === 1) ?
-                        'end with "' + $scope.condition.endsWith + '"' :
-                    (finals === 2) ?
-                        'contain "' + $scope.condition.contains + '"' :
-                    //
-                        ' contain at least ' + $scope.condition.length + ' letters'
+                    'start with "' + $scope.condition.startsWith + 
+                    '" and end with "' + $scope.condition.endsWith + '"'
+            } else {
                 
-                $scope.condition.name += SEPARATOR 
+                for(let i = 0; i < 2; i++) {
+
+                    //randomly pick type of condition
+                    finals = randIn(lower,upper)
+
+                    lower = 3
+                    upper = 3
+
+                    //add condition description to name
+                    $scope.condition.name += 
+                        (finals === 0) ?
+                            'start with "' + $scope.condition.startsWith + '"' :
+                        (finals === 1) ?
+                            'end with "' + $scope.condition.endsWith + '"' :
+                        (finals === 2) ?
+                            'contain "' + $scope.condition.contains + '"' :
+                        //
+                            ' contain at least ' + $scope.condition.length + ' letters'
+
+                    $scope.condition.name += SEPARATOR 
+                }
+                //delete separator from end
+                $scope.condition.name = $scope.condition.name.substring(0, $scope.condition.name.length-SEPARATOR.length)
             }
-            
-            //delete separator from end
-            $scope.condition.name = $scope.condition.name.substring(0, $scope.condition.name.length-SEPARATOR.length)
         }
         
         $scope.meetsConditions = word => {
@@ -160,9 +188,11 @@
                 $('#word-input').val('')
                 
                 console.log('Submitted ' + word)
-
+                
                 if($scope.meetsConditions(word) && !used) {
-                    $scope.amtCorrect++
+                    $scope.correctWords.push(word)
+                } else if(!used) {
+                    $scope.incorrectWords.push(word)
                 }
             }
         }

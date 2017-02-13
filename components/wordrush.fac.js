@@ -25,13 +25,18 @@
             function getLetters() {
                 return $http.get('../data/letters.txt');
             }
+        
+            function getCapPhrases() {
+                return $http.get('../data/valid-cap-phrases.txt');
+            }
            
             return {
-                getValidWords : getValidWords,
-                getLetters : getLetters,
+                getValidWords   : getValidWords,
+                getLetters      : getLetters,
                 getStartPhrases : getStartPhrases,
-                getInPhrases : getInPhrases,
-                getEndPhrases : getEndPhrases
+                getInPhrases    : getInPhrases,
+                getEndPhrases   : getEndPhrases,
+                getCapPhrases   : getCapPhrases
             }
         })
 })();
