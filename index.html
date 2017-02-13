@@ -31,13 +31,23 @@
                     placeholder="Word" 
                     ng-keydown="submitWord(applicant);"
                 />
+                
+                <div class="in-game-word-display">
+                    <h2 class="in-game-word-display-title">Submitted Words</h2>
+                </div>
             </md-content>
         </div>
         <div id="postgame" ng-show="!gameOn && !virgin">
             <p>Total Words: {{ submittedWords.length }}</p>
             <p>Correct Words: {{ correctWords.length }}</p>
-            <p>{{ correctWords }}</p>
-            <p>{{ incorrectWords }}</p>
+            <div layout="row">
+                <div class="end-display-row" id="correct-words">
+                    <h1>Correct Words</h1>
+                </div>
+                <div class="end-display-row" id="incorrect-words">
+                    <h1>Incorrect Words</h1>
+                </div>
+            </div>
         </div>
     </body>
 </html>

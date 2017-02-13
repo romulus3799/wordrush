@@ -35,9 +35,8 @@
         
         $scope.applicant = ''
         $scope.submittedWords = [] 
-        $scope.submittedDisplay = ''
-        $scope.correctWords = []
-        $scope.incorrectWords = []
+        var correctWords = []
+        var incorrectWords = []
         
         $scope.condition = {
             name: '',
@@ -67,15 +66,25 @@
             
             $scope.applicant = ''
             $scope.submittedWords = []
-            $scope.correctWords = []
-            $scope.incorrectWords = []
+            correctWords = []
+            incorrectWords = []
             
             $timeout($scope.endGame, 10000)
         }
         
         $scope.endGame = () => {
             $scope.gameOn = false
-            $scope.submittedDisplay = $scope.submittedWords.join('\n')
+            displaySubmittedWords()
+        }
+        
+        function displaySubmittedWords() {
+            $( ".inner" ).append( "<p>Test</p>" );
+            for(let i = 0; i < correctWords.length; i++) {
+                $('#correct-words').append('<p>    '+correctWords[i].toUpperCase()+'</p>')
+            }
+            for(let i = 0; i < incorrectWords.length; i++) {
+                $('#incorrect-words').append('<p>    '+incorrectWords[i].toUpperCase()+'</p>')
+            }
         }
         
         $scope.isWord = element => {
@@ -157,6 +166,9 @@
         
         $scope.meetsConditions = word => {
             var checked = 
+                ($scope.condition.startsAndEnds) ?
+                    word.startsWith($scope.condition.startsWith) && 
+                    word.endsWith($scope.condition.endsWith) :
                 (finals === 0) ?
                     word.startsWith($scope.condition.startsWith) :
                 (finals === 1) ?
@@ -169,9 +181,7 @@
             console.log(word + ': checked = ' + checked)
             console.log(word + ': is word = ' + $scope.isWord(word))
             
-            return  checked && 
-                    /*$.inArray(word, $scope.submittedWords) === -1 &&*/
-                    $scope.isWord(word)
+            return  checked && $scope.isWord(word)
         }
         
         $scope.submitWord = word => {
@@ -184,15 +194,16 @@
                 console.log(word + ': used = ' + used)
                 
                 $scope.submittedWords.push(word)
+                $('.in-game-word-display-title').after('<p>'+word.toUpperCase()+'</p>')
                 
                 $('#word-input').val('')
                 
                 console.log('Submitted ' + word)
                 
                 if($scope.meetsConditions(word) && !used) {
-                    $scope.correctWords.push(word)
+                    correctWords.push(word)
                 } else if(!used) {
-                    $scope.incorrectWords.push(word)
+                    incorrectWords.push(word)
                 }
             }
         }
