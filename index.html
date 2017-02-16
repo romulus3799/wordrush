@@ -22,8 +22,9 @@
         </div>
         <div id="interface" ng-show="gameOn && !virgin">
             <md-content class="md-padding">
+                <h3 id="timer-display">{{ timerDisplay }}s left</h3>   
                 <h1>Words that {{ condition.name }}</h1>
-
+        
                 <input 
                     type="text"  
                     id="word-input" 
@@ -39,7 +40,7 @@
         </div>
         <div id="postgame" ng-show="!gameOn && !virgin">
             <p>Total Words: {{ submittedWords.length }}</p>
-            <p>Correct Words: {{ correctWords.length }}</p>
+            <p>Correct Words: {{ amtCorrect }}</p>
             <div layout="row">
                 <div class="end-display-row" id="correct-words">
                     <h1>Correct Words</h1>

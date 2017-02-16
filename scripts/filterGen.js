@@ -1,10 +1,10 @@
 const fs = require('fs')
 const jsonfile = require('jsonfile')
 
-function generateFilter(inData, outData, filtData, complex) {
+function generateFilter(inData, outData, filtData, cond) {
     var phrases = []
     var output = {}
-    var cutoff = complex ? 10000 : 1000
+    var cutoff = (cond === 'endsWith') ? 800 : (cond == 'includes') ? 10000 : 1000
 //read and store possible phrases
     fs.readFile(inData, (err, data) => {
         if (err) {
@@ -23,13 +23,34 @@ function generateFilter(inData, outData, filtData, complex) {
             for(let i = 0; i < phrases.length; i++) {
                 console.log('Processing ' + phrases[i])
                 for(let a = 0; a < words.length; a++) {
-                    if(complex) {
+                        //count word if it contains phrase
+                    if(cond === 'includes') {
                         if(words[a].includes(phrases[i])) {
                             output[phrases[i]]++
                         }
-                    } else {
+                        //count word if it starts with phrase
+                    } else if(cond === 'startsWith') {
                         if(words[a].startsWith(phrases[i])) {
                             output[phrases[i]]++
+                        }
+                        //count word if it ends with phrase
+                    } else if(cond === 'endsWith') {
+                        if(words[a].endsWith(phrases[i])) {
+                            output[phrases[i]]++
+                        }
+                        //count word if the phrase caps it
+                    } else if(cond === 'both') {
+                        //check if phrase is > 1 letter, does not end with an 's', and does not contain 'u' or 'y'
+                        if(phrases[i].length > 1 
+                           && !phrases[i].endsWith('s') 
+                           && !phrases[i].includes('u') 
+                           && !phrases[i].endsWith('y')) {
+                            
+                            var st = phrases[i].charAt(0)
+                            var en = phrases[i].charAt(1)
+                            if(words[a].startsWith(st) && words[a].endsWith(en)) {
+                                output[phrases[i]]++
+                            }
                         }
                     }
                 }
@@ -55,12 +76,22 @@ function generateFilter(inData, outData, filtData, complex) {
     })
 }
 
-generateFilter('../data/phrases.txt', 
-               '../data/phrase-data.json', 
-               '../data/valid-phrases.txt',
-               false)
+generateFilter('../data/clean-phrases.txt', 
+               '../data/start-phrase-data.json', 
+               '../data/valid-start-phrases.txt',
+               'startsWith')
 
 generateFilter('../data/dirty-phrases.txt', 
-               '../data/dirty-phrase-data.json', 
-               '../data/valid-dirty-phrases.txt', 
-               true)
+               '../data/in-phrase-data.json', 
+               '../data/valid-in-phrases.txt', 
+               'includes')
+
+generateFilter('../data/dirty-phrases.txt', 
+               '../data/end-phrase-data.json', 
+               '../data/valid-end-phrases.txt', 
+               'endsWith')
+
+generateFilter('../data/dirty-phrases.txt', 
+               '../data/cap-phrase-data.json', 
+               '../data/valid-cap-phrases.txt', 
+               'both')

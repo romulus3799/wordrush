@@ -1,6 +1,17 @@
 body {
     padding-left: 50px;
 }
+p.correct {
+    color: #4CAF50;
+    font-weight: bold;
+}
+.incorrect {
+    color: #E64A19;
+    font-weight: bold;
+}
+.used {
+    color: #9E9E9E;
+}
 div .end-display-row {
     padding: 20px;
 }

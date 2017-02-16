@@ -3,7 +3,7 @@
     
     angular
         .module('wordrush')
-        .controller('wordrushCtrl', ($scope, $timeout, $http, wordRushFac) => {
+        .controller('wordrushCtrl', ($scope, $timeout, $interval, $http, wordRushFac) => {
         
         $scope.gameOn = false
         $scope.virgin = true
@@ -37,7 +37,11 @@
         $scope.submittedWords = [] 
         var correctWords = []
         var incorrectWords = []
-        
+        $scope.timer = 0
+        $scope.timerDisplay = ''
+        var promise
+        const TIMESTART = 30.00
+        const TIMEDIV = 10
         $scope.condition = {
             name: '',
             startsAndEnds: false,
@@ -69,21 +73,37 @@
             correctWords = []
             incorrectWords = []
             
-            $timeout($scope.endGame, 10000)
+            $scope.timer = TIMESTART
+            promise = $interval(fTimer, TIMEDIV)
+        }
+        
+        function fTimer() {
+            //take time away, format to 2 decimals
+            $scope.timer -= TIMEDIV/1000
+            $scope.timer = Math.floor($scope.timer * 100) / 100
+            $scope.timerDisplay = String($scope.timer)
+            while($scope.timerDisplay.substring($scope.timerDisplay.indexOf('.')).length < 3) {
+                $scope.timerDisplay += '0'
+            }
+            if($scope.timer <= 0) {
+                $scope.endGame()
+            }
         }
         
         $scope.endGame = () => {
+            $interval.cancel(promise)
             $scope.gameOn = false
+            $scope.amtCorrect = correctWords.length
             displaySubmittedWords()
         }
         
         function displaySubmittedWords() {
             $( ".inner" ).append( "<p>Test</p>" );
             for(let i = 0; i < correctWords.length; i++) {
-                $('#correct-words').append('<p>    '+correctWords[i].toUpperCase()+'</p>')
+                $('#correct-words').append('<p class="correct">    '+correctWords[i].toUpperCase()+'</p>')
             }
             for(let i = 0; i < incorrectWords.length; i++) {
-                $('#incorrect-words').append('<p>    '+incorrectWords[i].toUpperCase()+'</p>')
+                $('#incorrect-words').append('<p class="incorrect">    '+incorrectWords[i].toUpperCase()+'</p>')
             }
         }
         
@@ -141,11 +161,12 @@
                 for(let i = 0; i < 2; i++) {
 
                     //randomly pick type of condition
+                    let temp = finals
                     finals = randIn(lower,upper)
 
                     lower = 3
                     upper = 3
-
+                    
                     //add condition description to name
                     $scope.condition.name += 
                         (finals === 0) ?
@@ -158,6 +179,8 @@
                             ' contain at least ' + $scope.condition.length + ' letters'
 
                     $scope.condition.name += SEPARATOR 
+                    if(i === 1) finals = temp
+                    console.log('finals = ' + finals)
                 }
                 //delete separator from end
                 $scope.condition.name = $scope.condition.name.substring(0, $scope.condition.name.length-SEPARATOR.length)
@@ -165,18 +188,22 @@
         }
         
         $scope.meetsConditions = word => {
-            var checked = 
-                ($scope.condition.startsAndEnds) ?
-                    word.startsWith($scope.condition.startsWith) && 
-                    word.endsWith($scope.condition.endsWith) :
-                (finals === 0) ?
-                    word.startsWith($scope.condition.startsWith) :
-                (finals === 1) ?
-                    word.endsWith($scope.condition.endsWith) :
-                (finals === 2) ?
-                    word.includes($scope.condition.contains) :
-                //
-                    word.length >= $scope.condition.length
+            
+            var checked = false
+            
+            if($scope.condition.startsAndEnds) {
+                checked = word.startsWith($scope.condition.startsWith) && 
+                    word.endsWith($scope.condition.endsWith)
+            } else {
+                checked = 
+                    (finals === 0) ?
+                        word.startsWith($scope.condition.startsWith) :
+                    (finals === 1) ?
+                        word.endsWith($scope.condition.endsWith) :
+                    //finals === 2
+                        word.includes($scope.condition.contains)
+                checked = checked && (word.length >= $scope.condition.length) 
+            }
             
             console.log(word + ': checked = ' + checked)
             console.log(word + ': is word = ' + $scope.isWord(word))
@@ -193,17 +220,25 @@
                 var used = $.inArray(word, $scope.submittedWords) !== -1
                 console.log(word + ': used = ' + used)
                 
-                $scope.submittedWords.push(word)
-                $('.in-game-word-display-title').after('<p>'+word.toUpperCase()+'</p>')
-                
                 $('#word-input').val('')
                 
                 console.log('Submitted ' + word)
                 
+                //if word is correct
                 if($scope.meetsConditions(word) && !used) {
+                    $scope.submittedWords.push(word)
                     correctWords.push(word)
+                    $('.in-game-word-display-title').after('<p class="correct">'+word.toUpperCase()+'</p>')
+                    
+                //if word is incorrect
                 } else if(!used) {
+                    $scope.submittedWords.push(word)
                     incorrectWords.push(word)
+                    $('.in-game-word-display-title').after('<p class="incorrect">'+word.toUpperCase()+'</p>')
+               
+                //if word has been entered already
+                } else {
+                    $('.in-game-word-display-title').after('<p class="used">'+word.toUpperCase()+'</p>')
                 }
             }
         }
