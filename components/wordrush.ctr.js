@@ -40,7 +40,7 @@
         $scope.timer = 0
         $scope.timerDisplay = ''
         var promise
-        const TIMESTART = 30.00
+        const TIMESTART = 60.00
         const TIMEDIV = 10
         $scope.condition = {
             name: '',
@@ -117,6 +117,7 @@
         
         $scope.endGame = () => {
             $interval.cancel(promise)
+            $('.dynamic').remove()
             $scope.gameOn = false
             $scope.amtCorrect = correctWords.length
             displaySubmittedWords()
@@ -125,10 +126,10 @@
         function displaySubmittedWords() {
             $( ".inner" ).append( "<p>Test</p>" );
             for(let i = 0; i < correctWords.length; i++) {
-                $('#correct-words').append('<p class="correct">    '+correctWords[i].toUpperCase()+'</p>')
+                $('#correct-words').append('<p class="correct dynamic">    '+correctWords[i].toUpperCase()+'</p>')
             }
             for(let i = 0; i < incorrectWords.length; i++) {
-                $('#incorrect-words').append('<p class="incorrect">    '+incorrectWords[i].toUpperCase()+'</p>')
+                $('#incorrect-words').append('<p class="incorrect dynamic">    '+incorrectWords[i].toUpperCase()+'</p>')
             }
         }
         
@@ -253,17 +254,17 @@
                 if($scope.meetsConditions(word) && !used) {
                     $scope.submittedWords.push(word)
                     correctWords.push(word)
-                    $('.in-game-word-display-title').after('<p class="correct">'+word.toUpperCase()+'</p>')
+                    $('.in-game-word-display-title').after('<p class="correct dynamic">'+word.toUpperCase()+'</p>')
                     
                 //if word is incorrect
                 } else if(!used) {
                     $scope.submittedWords.push(word)
                     incorrectWords.push(word)
-                    $('.in-game-word-display-title').after('<p class="incorrect">'+word.toUpperCase()+'</p>')
+                    $('.in-game-word-display-title').after('<p class="incorrect dynamic">'+word.toUpperCase()+'</p>')
                
                 //if word has been entered already
                 } else {
-                    $('.in-game-word-display-title').after('<p class="used">'+word.toUpperCase()+'</p>')
+                    $('.in-game-word-display-title').after('<p class="used dynamic">'+word.toUpperCase()+'</p>')
                 }
             }
         }
