@@ -18,7 +18,8 @@
     </head>
     <body ng-app="wordrush" ng-controller="wordrushCtrl">
         <div id="pregame" ng-show="!gameOn && virgin">
-            <md-button ng-click="startGame()">Start Game</md-button>
+            <h1>Word Rush</h1>
+            <md-button class="md-primary" ng-click="startGame()">Start Game</md-button>
         </div>
         <div id="interface" ng-show="gameOn && !virgin">
             <md-content class="md-padding">
@@ -32,7 +33,7 @@
                     placeholder="Word" 
                     ng-keydown="submitWord(applicant);"
                 />
-                
+                <md-button class="md-warn" ng-click="endGame()">End Game</md-button>
                 <div class="in-game-word-display">
                     <h2 class="in-game-word-display-title">Submitted Words</h2>
                 </div>
@@ -41,6 +42,8 @@
         <div id="postgame" ng-show="!gameOn && !virgin">
             <p>Total Words: {{ submittedWords.length }}</p>
             <p>Correct Words: {{ amtCorrect }}</p>
+            <md-button class="md-primary" ng-click="startGame()">Play Again</md-button>
+            <md-button class="md-warn" ng-click="resetGame()">Back</md-button>
             <div layout="row">
                 <div class="end-display-row" id="correct-words">
                     <h1>Correct Words</h1>

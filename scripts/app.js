@@ -1,9 +1,9 @@
 angular
 .module('wordrush', ['ngMaterial'])
-.config(function() {
-/*
+.config($mdThemingProvider => {
+
     $mdThemingProvider.theme('default')
-    .primaryPalette('blue')
-    .accentPalette('green');
-    */
+    .primaryPalette('deep-purple')
+    .accentPalette('lime');
+    
 });

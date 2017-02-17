@@ -60,6 +60,31 @@
         const MINTIMES = 1
         const MAXTIMES = 3
         
+        $scope.resetGame = () => {
+            $scope.gameOn = false
+            $scope.virgin = true
+            
+            $scope.applicant = ''
+            $scope.submittedWords = []
+            correctWords = []
+            incorrectWords = []
+            $scope.timer = 0
+            $scope.timerDisplay = ''
+            
+            $scope.condition = {
+                name: '',
+                startsAndEnds: false,
+                startsWith: '',
+                endsWith: '',
+                contains: '',
+                length: 1,
+                containsTimes: 0
+            }
+            finals = -1
+            
+            console.log('game reset')
+        }
+        
         $scope.startGame = () => {
             $scope.gameOn = true
             $scope.virgin = false
