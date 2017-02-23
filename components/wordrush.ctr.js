@@ -3,7 +3,7 @@
     
     angular
         .module('wordrush')
-        .controller('wordrushCtrl', ($scope, $timeout, $interval, $http, wordRushFac) => {
+        .controller('wordrushCtrl', ($scope, $timeout, $interval, $http, $window, wordRushFac) => {
         
         $scope.gameOn = false
         $scope.virgin = true
@@ -11,8 +11,14 @@
         wordRushFac.getValidWords().then(words => {
             $scope.words = String(words.data).split(',')
         })
+        wordRushFac.getLetterValues().then(data => {
+            $scope.letterValues = data.data
+            console.log($scope.letterValues)
+            console.log('Read letter values')
+        });
         wordRushFac.getStartPhrases().then(phrases => {
             $scope.startPhrases = String(phrases.data).split(',')
+            console.log('Read start phrases')
         })
         wordRushFac.getInPhrases().then(phrases => {
             $scope.inPhrases = String(phrases.data).split(',')
@@ -60,6 +66,9 @@
         const MINTIMES = 1
         const MAXTIMES = 3
         
+        $scope.score = 0
+        var scores = []
+        
         $scope.resetGame = () => {
             $scope.gameOn = false
             $scope.virgin = true
@@ -82,6 +91,8 @@
             }
             finals = -1
             
+            $scope.score = 0
+            
             console.log('game reset')
         }
         
@@ -100,6 +111,14 @@
             
             $scope.timer = TIMESTART
             promise = $interval(fTimer, TIMEDIV)
+            
+            $scope.score = 0
+            
+            //focus on word input
+            $timeout(() => {
+                let e = $window.document.getElementById('word-input')
+                if(e) {e.focus()}
+            })
         }
         
         function fTimer() {
@@ -115,21 +134,44 @@
             }
         }
         
+        function calculateScore() {
+            for (let w = 0; w < correctWords.length; w++) {
+                let chars = correctWords[w].split('')
+                let wordScore = 0
+                
+                for (let l = 0; l < chars.length; l++) {
+                    let charScore = $scope.letterValues[chars[l]]
+                    //console.log(chars[l] + ':' + charScore)
+                    wordScore += charScore
+                }
+                
+                scores.push(wordScore)
+            }
+            $scope.score = scores.reduce((a,b)=>{return a+b}, 0);
+        }
+        
         $scope.endGame = () => {
             $interval.cancel(promise)
             $('.dynamic').remove()
             $scope.gameOn = false
+            
+            calculateScore()
+            
             $scope.amtCorrect = correctWords.length
             displaySubmittedWords()
         }
         
         function displaySubmittedWords() {
-            $( ".inner" ).append( "<p>Test</p>" );
             for(let i = 0; i < correctWords.length; i++) {
-                $('#correct-words').append('<p class="correct dynamic">    '+correctWords[i].toUpperCase()+'</p>')
+                let rowID = 'correct-data-' + i
+                $('#correct-table').append('<tr id="'+rowID+'">')
+                $('#'+rowID).append('<td class="correct tbl-data">'+correctWords[i].toUpperCase()+'</td>')
+                $('#'+rowID).append('<td class="score tbl-data">'+scores[i]+' pts</td>')
             }
             for(let i = 0; i < incorrectWords.length; i++) {
-                $('#incorrect-words').append('<p class="incorrect dynamic">    '+incorrectWords[i].toUpperCase()+'</p>')
+                let rowID = 'incorrect-data-' + i
+                $('#incorrect-table').append('<tr id="'+rowID+'">')
+                $('#'+rowID).append('<td class="incorrect tbl-data-left">'+incorrectWords[i].toUpperCase()+'</td>')
             }
         }
         
@@ -179,7 +221,7 @@
             var lower = 0
             var upper = 2
             if($scope.condition.startsAndEnds) {
-                $scope.condition.name += 
+                $scope.condition.name = 
                     'start with "' + $scope.condition.startsWith + 
                     '" and end with "' + $scope.condition.endsWith + '"'
             } else {
@@ -194,7 +236,7 @@
                     upper = 3
                     
                     //add condition description to name
-                    $scope.condition.name += 
+                    $scope.condition.name = 
                         (finals === 0) ?
                             'start with "' + $scope.condition.startsWith + '"' :
                         (finals === 1) ?

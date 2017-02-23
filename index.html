@@ -31,6 +31,7 @@
                     id="word-input" 
                     ng-model="applicant"
                     placeholder="Word" 
+                    maxlength="30"
                     ng-keydown="submitWord(applicant);"
                 />
                 <md-button class="md-warn" ng-click="endGame()">End Game</md-button>
@@ -40,6 +41,7 @@
             </md-content>
         </div>
         <div id="postgame" ng-show="!gameOn && !virgin">
+            <h1>Score: {{ score }}</h1>
             <p>Total Words: {{ submittedWords.length }}</p>
             <p>Correct Words: {{ amtCorrect }}</p>
             <md-button class="md-primary" ng-click="startGame()">Play Again</md-button>
@@ -47,9 +49,20 @@
             <div layout="row">
                 <div class="end-display-row" id="correct-words">
                     <h1>Correct Words</h1>
+                    <table class="word-table" id="correct-table">
+                        <tr class="correct-table-headings">
+                            <th class="tbl-data">Word</th>
+                            <th class="tbl-data">Score</th>
+                        </tr>
+                    </table>
                 </div>
                 <div class="end-display-row" id="incorrect-words">
                     <h1>Incorrect Words</h1>
+                    <table class="word-table" id="incorrect-table">
+                        <tr class="incorrect-table-headings">
+                            <th class="tbl-data-left">Word</th>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>

@@ -8,10 +8,13 @@
             function getValidWords() {
                 return $http.get('../data/valid-words.txt');
             }
-
+        
+            function getLetterValues() {
+                return $http.get('../data/letter-values.json')
+            }
             
             function getStartPhrases() {
-                return $http.get('../data/valid-start-phrases.txt');
+                return $http.get('../data/valid-start-phrases.txt')
             }
 
             function getInPhrases() {
@@ -32,6 +35,7 @@
            
             return {
                 getValidWords   : getValidWords,
+                getLetterValues : getLetterValues,
                 getLetters      : getLetters,
                 getStartPhrases : getStartPhrases,
                 getInPhrases    : getInPhrases,

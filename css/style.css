@@ -1,7 +1,10 @@
 body {
     padding-left: 50px;
 }
-p.correct {
+td, th {
+    padding-right: 20px;
+}
+td,p, th .correct {
     color: #4CAF50;
     font-weight: bold;
 }
@@ -12,6 +15,16 @@ p.correct {
 .used {
     color: #9E9E9E;
 }
-div .end-display-row {
+.score {
+    color: #2196F3;
+    font-weight: normal;
+}
+.tbl-data {
+    text-align: right;
+}
+.tbl-data-left {
+    text-align: left;
+}
+div.end-display-row {
     padding: 20px;
 }
