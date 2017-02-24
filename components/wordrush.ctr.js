@@ -69,6 +69,9 @@
         $scope.score = 0
         var scores = []
         
+        $scope.correctData = []
+        $scope.incorrectData = []
+        
         $scope.resetGame = () => {
             $scope.gameOn = false
             $scope.virgin = true
@@ -92,7 +95,9 @@
             finals = -1
             
             $scope.score = 0
-            
+            $scope.correctData = []
+            $scope.incorrectData = []
+        
             console.log('game reset')
         }
         
@@ -114,6 +119,9 @@
             
             $scope.score = 0
             
+            $scope.correctData = []
+            $scope.incorrectData = []
+        
             //focus on word input
             $timeout(() => {
                 let e = $window.document.getElementById('word-input')
@@ -163,15 +171,17 @@
         
         function displaySubmittedWords() {
             for(let i = 0; i < correctWords.length; i++) {
-                let rowID = 'correct-data-' + i
-                $('#correct-table').append('<tr id="'+rowID+'">')
-                $('#'+rowID).append('<td class="correct tbl-data">'+correctWords[i].toUpperCase()+'</td>')
-                $('#'+rowID).append('<td class="score tbl-data">'+scores[i]+' pts</td>')
+                $scope.correctData.push({
+                    word    : correctWords[i].toUpperCase(),
+                    score   : scores[i],
+                    id      : 'correct-data-'+i
+                })
             }
             for(let i = 0; i < incorrectWords.length; i++) {
-                let rowID = 'incorrect-data-' + i
-                $('#incorrect-table').append('<tr id="'+rowID+'">')
-                $('#'+rowID).append('<td class="incorrect tbl-data-left">'+incorrectWords[i].toUpperCase()+'</td>')
+                $scope.incorrectData.push({
+                    word    : incorrectWords[i].toUpperCase(),
+                    id      : 'incorrect-data-'+i
+                })
             }
         }
         
@@ -221,7 +231,7 @@
             var lower = 0
             var upper = 2
             if($scope.condition.startsAndEnds) {
-                $scope.condition.name = 
+                $scope.condition.name += 
                     'start with "' + $scope.condition.startsWith + 
                     '" and end with "' + $scope.condition.endsWith + '"'
             } else {
@@ -236,7 +246,7 @@
                     upper = 3
                     
                     //add condition description to name
-                    $scope.condition.name = 
+                    $scope.condition.name += 
                         (finals === 0) ?
                             'start with "' + $scope.condition.startsWith + '"' :
                         (finals === 1) ?

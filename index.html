@@ -25,15 +25,18 @@
             <md-content class="md-padding">
                 <h3 id="timer-display">{{ timerDisplay }}s left</h3>   
                 <h1>Words that {{ condition.name }}</h1>
-        
-                <input 
-                    type="text"  
-                    id="word-input" 
-                    ng-model="applicant"
-                    placeholder="Word" 
-                    maxlength="30"
-                    ng-keydown="submitWord(applicant);"
-                />
+                
+                <md-input-container>
+                    <label for="word-input">Word</label>
+                    <input 
+                        type="text"  
+                        id="word-input" 
+                        ng-model="applicant"
+                        maxlength="30"
+                        ng-keydown="submitWord(applicant);"
+                        md-autofocus
+                    />
+                </md-input-container>
                 <md-button class="md-warn" ng-click="endGame()">End Game</md-button>
                 <div class="in-game-word-display">
                     <h2 class="in-game-word-display-title">Submitted Words</h2>
@@ -49,20 +52,31 @@
             <div layout="row">
                 <div class="end-display-row" id="correct-words">
                     <h1>Correct Words</h1>
+                    
                     <table class="word-table" id="correct-table">
                         <tr class="correct-table-headings">
                             <th class="tbl-data">Word</th>
                             <th class="tbl-data">Score</th>
                         </tr>
+                        <tr ng-repeat="data in correctData" class="correct-row" id="{{ data.id }}">
+                            <td class="correct tbl-data">{{ data.word }}</td>
+                            <td class="score tbl-data">{{ data.score }}</td>
+                        </tr>
                     </table>
+                    
                 </div>
                 <div class="end-display-row" id="incorrect-words">
                     <h1>Incorrect Words</h1>
+                    
                     <table class="word-table" id="incorrect-table">
                         <tr class="incorrect-table-headings">
                             <th class="tbl-data-left">Word</th>
                         </tr>
+                        <tr ng-repeat="data in incorrectData" class="incorrect-row" id="data.id">
+                            <td class="incorrect tbl-data-left">{{ data.word }}</td>
+                        </tr>
                     </table>
+                    
                 </div>
             </div>
         </div>
