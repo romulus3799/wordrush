@@ -3,7 +3,7 @@ angular
 .config($mdThemingProvider => {
 
     $mdThemingProvider.theme('default')
-    .primaryPalette('deep-purple')
+    .primaryPalette('blue')
     .accentPalette('lime');
     
 });

@@ -1,10 +1,30 @@
 body {
+    font-family: "FuturaExtended";
     padding-left: 50px;
 }
 td, th {
     padding-right: 20px;
 }
-td,p, th .correct {
+.heading {
+    font-family: "Afta Serif";
+}
+button.heading {
+    font-family: "FuturaExtended";
+    font-size: 32pt;
+    padding: 20px;
+}
+.accent {
+    color: #AEEA00;
+}
+#word-input {
+    font-family: "FuturaExtended";
+    font-size: 48pt;
+    padding: 12px;
+}
+.dynamic {
+    font-size: 20pt;
+}
+.correct {
     color: #4CAF50;
     font-weight: bold;
 }

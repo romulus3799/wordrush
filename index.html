@@ -18,37 +18,37 @@
     </head>
     <body ng-app="wordrush" ng-controller="wordrushCtrl">
         <div id="pregame" ng-show="!gameOn && virgin">
-            <h1>Word Rush</h1>
-            <md-button class="md-primary" ng-click="startGame()">Start Game</md-button>
+            <h1 class="heading">Word Rush</h1>
+            <md-button class="md-primary heading" ng-click="startGame()">Start Game</md-button>
         </div>
         <div id="interface" ng-show="gameOn && !virgin">
             <md-content class="md-padding">
                 <h3 id="timer-display">{{ timerDisplay }}s left</h3>   
                 <h1>Words that {{ condition.name }}</h1>
                 
-                <md-input-container>
-                    <label for="word-input">Word</label>
-                    <input 
-                        type="text"  
-                        id="word-input" 
-                        ng-model="applicant"
-                        maxlength="30"
-                        ng-keydown="submitWord(applicant);"
-                        md-autofocus
-                    />
-                </md-input-container>
-                <md-button class="md-warn" ng-click="endGame()">End Game</md-button>
+                <input 
+                    type="text"  
+                    id="word-input"
+                    placeholder="Word"
+                    ng-model="applicant"
+                    maxlength="30"
+                    ng-keydown="submitWord(applicant)"
+                    md-autofocus
+                />
+                
+                <md-button class="md-warn heading" ng-click="endGame()">End Game</md-button>
+                
                 <div class="in-game-word-display">
                     <h2 class="in-game-word-display-title">Submitted Words</h2>
                 </div>
             </md-content>
         </div>
         <div id="postgame" ng-show="!gameOn && !virgin">
-            <h1>Score: {{ score }}</h1>
             <p>Total Words: {{ submittedWords.length }}</p>
             <p>Correct Words: {{ amtCorrect }}</p>
-            <md-button class="md-primary" ng-click="startGame()">Play Again</md-button>
+            <md-button class="heading accent" ng-click="startGame()">Play Again</md-button>
             <md-button class="md-warn" ng-click="resetGame()">Back</md-button>
+            <h1>Total Score: {{ score }} pts</h1>
             <div layout="row">
                 <div class="end-display-row" id="correct-words">
                     <h1>Correct Words</h1>
@@ -60,7 +60,7 @@
                         </tr>
                         <tr ng-repeat="data in correctData" class="correct-row" id="{{ data.id }}">
                             <td class="correct tbl-data">{{ data.word }}</td>
-                            <td class="score tbl-data">{{ data.score }}</td>
+                            <td class="score tbl-data">{{ data.score }} pts</td>
                         </tr>
                     </table>
                     
@@ -78,6 +78,9 @@
                     </table>
                     
                 </div>
+            </div>
+            <div id="suggestion">
+                
             </div>
         </div>
     </body>

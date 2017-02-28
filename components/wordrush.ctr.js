@@ -95,6 +95,8 @@
             finals = -1
             
             $scope.score = 0
+            scores = []
+            
             $scope.correctData = []
             $scope.incorrectData = []
         
@@ -118,6 +120,7 @@
             promise = $interval(fTimer, TIMEDIV)
             
             $scope.score = 0
+            scores = []
             
             $scope.correctData = []
             $scope.incorrectData = []
@@ -166,10 +169,10 @@
             calculateScore()
             
             $scope.amtCorrect = correctWords.length
-            displaySubmittedWords()
+            generateResults()
         }
         
-        function displaySubmittedWords() {
+        function generateResults() {
             for(let i = 0; i < correctWords.length; i++) {
                 $scope.correctData.push({
                     word    : correctWords[i].toUpperCase(),
