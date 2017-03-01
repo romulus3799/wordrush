@@ -5,11 +5,23 @@ body {
 td, th {
     padding-right: 20px;
 }
+#suggestion-box {
+    font-family: "Afta Serif";
+    padding: 100px 0px 0px 100px;
+}
+.suggestion {
+    font-size: 20pt;
+}
 .heading {
     font-family: "Afta Serif";
 }
 button.heading {
     font-family: "FuturaExtended";
+    font-size: 32pt;
+    padding: 20px;
+}
+.light-heading {
+    font-family: "Futura (Light)";
     font-size: 32pt;
     padding: 20px;
 }

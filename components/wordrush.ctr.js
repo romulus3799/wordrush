@@ -69,6 +69,9 @@
         $scope.score = 0
         var scores = []
         
+        $scope.suggestion = ''
+        $scope.suggDef = '' 
+        
         $scope.correctData = []
         $scope.incorrectData = []
         
@@ -97,6 +100,9 @@
             $scope.score = 0
             scores = []
             
+            $scope.suggestion = ''
+            $scope.suggDef = ''
+            
             $scope.correctData = []
             $scope.incorrectData = []
         
@@ -121,6 +127,9 @@
             
             $scope.score = 0
             scores = []
+            
+            $scope.suggestion = ''
+            $scope.suggDef = ''
             
             $scope.correctData = []
             $scope.incorrectData = []
@@ -170,6 +179,7 @@
             
             $scope.amtCorrect = correctWords.length
             generateResults()
+            suggestWord()
         }
         
         function generateResults() {
@@ -286,8 +296,8 @@
                 checked = checked && (word.length >= $scope.condition.length) 
             }
             
-            console.log(word + ': checked = ' + checked)
-            console.log(word + ': is word = ' + $scope.isWord(word))
+            //console.log(word + ': checked = ' + checked)
+            //console.log(word + ': is word = ' + $scope.isWord(word))
             
             return  checked && $scope.isWord(word)
         }
@@ -324,6 +334,23 @@
             }
         }
         
+        function suggestWord() {
+            
+            //create array of every word that meets condition
+            let goodWords = []
+            for(let i = 0; i < $scope.words.length; i++) {
+                let w = $scope.words[i]
+                if($scope.meetsConditions(w)) {
+                    goodWords.push(w)
+                }
+            }
+            console.log('Amount of ' + $scope.condition.name + ': ' + goodWords.length)
+            
+            $scope.suggestion = randElement(goodWords)
+            console.log('Suggestion: ' + $scope.suggestion)
+        }
+        
+        //minor helper methods
         function randElement(arr) {
             var index = Math.floor(Math.random() * arr.length)
             return arr[index]
