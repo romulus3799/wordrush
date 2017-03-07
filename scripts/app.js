@@ -5,5 +5,4 @@ angular
     $mdThemingProvider.theme('default')
     .primaryPalette('blue')
     .accentPalette('lime');
-    
 });

@@ -32,7 +32,7 @@
             function getCapPhrases() {
                 return $http.get('../data/valid-cap-phrases.txt');
             }
-           
+            
             return {
                 getValidWords   : getValidWords,
                 getLetterValues : getLetterValues,

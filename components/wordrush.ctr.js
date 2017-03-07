@@ -5,9 +5,6 @@
         .module('wordrush')
         .controller('wordrushCtrl', ($scope, $timeout, $interval, $http, $window, wordRushFac) => {
         
-        $scope.gameOn = false
-        $scope.virgin = true
-        
         wordRushFac.getValidWords().then(words => {
             $scope.words = String(words.data).split(',')
         })
@@ -38,6 +35,9 @@
         wordRushFac.getLetters().then(letters => {
             $scope.letters = String(letters.data).split(',')
         })
+        
+        $scope.gameOn = false
+        $scope.virgin = true
         
         $scope.applicant = ''
         $scope.submittedWords = [] 
@@ -70,7 +70,7 @@
         var scores = []
         
         $scope.suggestion = ''
-        $scope.suggDef = '' 
+        $scope.suggLink = ''
         
         $scope.correctData = []
         $scope.incorrectData = []
@@ -101,7 +101,7 @@
             scores = []
             
             $scope.suggestion = ''
-            $scope.suggDef = ''
+            $scope.suggLink = ''
             
             $scope.correctData = []
             $scope.incorrectData = []
@@ -129,7 +129,7 @@
             scores = []
             
             $scope.suggestion = ''
-            $scope.suggDef = ''
+            $scope.suggLink = ''
             
             $scope.correctData = []
             $scope.incorrectData = []
@@ -347,6 +347,7 @@
             console.log('Amount of ' + $scope.condition.name + ': ' + goodWords.length)
             
             $scope.suggestion = randElement(goodWords)
+            $scope.suggLink = 'http://encyclopedia2.thefreedictionary.com/' + $scope.suggestion
             console.log('Suggestion: ' + $scope.suggestion)
         }
         

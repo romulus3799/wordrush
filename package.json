@@ -11,6 +11,6 @@
   "license": "ISC",
   "dependencies": {
     "angular": "^1.6.1",
-    "jsonfile": "^2.4.0"
+    "uniq": "^1.0.1"
   }
 }
