@@ -1,93 +1,103 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Word Rush</title>
-        
-        <link rel="stylesheet" href="node_modules/angular-material/angular-material.min.css">
-        <link rel="stylesheet" href="node_modules/mdi/css/materialdesignicons.min.css" media="all" type="text/css">
-        <link rel="stylesheet" type="text/css" href="css/style.css">
-        
-        <script src="node_modules/angular/angular.js"></script>
-        <script src="node_modules/angular-animate/angular-animate.js"></script>
-        <script src="node_modules/angular-aria/angular-aria.js"></script>
-        <script src="node_modules/angular-material/angular-material.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-        <script src="scripts/app.js"></script>
-        <script src="components/wordrush.fac.js"></script>
-        <script src="components/wordrush.ctr.js"></script>
-    </head>
-    <body ng-app="wordrush" ng-controller="wordrushCtrl">
-        <div id="pregame" ng-show="!gameOn && virgin">
-            <h1 class="heading">Word Rush</h1>
-            <md-button class="md-primary heading" ng-click="startGame()">Start Game</md-button>
+  <head>
+    <title>Word Rush</title>
+
+    <link rel="stylesheet" href="node_modules/angular-material/angular-material.min.css">
+    <link rel="stylesheet" href="node_modules/mdi/css/materialdesignicons.min.css" media="all" type="text/css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+    <script src="node_modules/angular/angular.js"></script>
+    <script src="node_modules/angular-animate/angular-animate.js"></script>
+    <script src="node_modules/angular-aria/angular-aria.js"></script>
+    <script src="node_modules/angular-material/angular-material.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="scripts/app.js"></script>
+    <script src="components/wordrush.fac.js"></script>
+    <script src="components/wordrush.ctr.js"></script>
+  </head>
+  <body ng-app="wordrush" ng-controller="wordrushCtrl">
+    <div id="pregame" ng-show="!gameOn && virgin">
+      <h1 class="heading">Word Rush</h1>
+      <md-button class="md-primary heading" ng-click="startGame()">Start Game</md-button>
+    </div>
+    <div id="interface" ng-show="gameOn && !virgin">
+      <md-content class="md-padding">
+        <h3 id="timer-display">{{ timerDisplay }}s left</h3>
+        <h1>{{ condition.name }}</h1>
+
+        <input
+          type="text"
+          id="word-input"
+          placeholder="Word"
+          ng-model="applicant"
+          maxlength="30"
+          ng-keydown="submitWord(applicant)"
+          md-autofocus
+        />
+
+        <md-button class="md-warn heading" ng-click="endGame()">End Game</md-button>
+
+        <div class="in-game-word-display">
+          <h2 class="in-game-word-display-title">Submitted Words</h2>
         </div>
-        <div id="interface" ng-show="gameOn && !virgin">
-            <md-content class="md-padding">
-                <h3 id="timer-display">{{ timerDisplay }}s left</h3>   
-                <h1>Words that {{ condition.name }}</h1>
-                
-                <input 
-                    type="text"  
-                    id="word-input"
-                    placeholder="Word"
-                    ng-model="applicant"
-                    maxlength="30"
-                    ng-keydown="submitWord(applicant)"
-                    md-autofocus
-                />
-                
-                <md-button class="md-warn heading" ng-click="endGame()">End Game</md-button>
-                
-                <div class="in-game-word-display">
-                    <h2 class="in-game-word-display-title">Submitted Words</h2>
-                </div>
-            </md-content>
+      </md-content>
+    </div>
+    <div id="postgame" ng-show="!gameOn && !virgin">
+       <div layout="row">
+        <div id="general-info">
+
+          <md-button class="heading accent" ng-click="startGame()">Play Again</md-button>
+          <md-button class="md-warn light-heading" ng-click="startGame()">Back</md-button>
+
+          <h1>Total Score: {{ score }} pts</h1>
+           <table class="table" id="general-table">
+            <tr>
+              <th class="tbl-data">Total Words:</th>
+              <td class="score tbl-data">{{ submittedWords.length }} words</td>
+            </tr>
+            <tr>
+              <th class="tbl-data">Correct Words:</th>
+              <td class="score tbl-data">{{ amtCorrect }} words</td>
+            </tr>
+          </table>
         </div>
-        <div id="postgame" ng-show="!gameOn && !virgin">
-           <div layout="row">
-                <div id="general-info">
-                    <p>Total Words: {{ submittedWords.length }}</p>
-                    <p>Correct Words: {{ amtCorrect }}</p>
-                    <md-button class="heading accent" ng-click="startGame()">Play Again</md-button>
-                    <md-button class="md-warn light-heading" ng-click="resetGame()">Back</md-button>
-                    <h1>Total Score: {{ score }} pts</h1>
-                </div>
-                <div id="suggestion-box">
-                    <span>Here's another word that fits the conditions: </span>
-                    <a class="suggestion" target="_blank" ng-href="{{ suggLink }}">"{{ suggestion }}"</a>
-               </div>
-            </div>
-            <div layout="row">
-                <div class="end-display-row" id="correct-words">
-                    <h1>Correct Words</h1>
-                    
-                    <table class="word-table" id="correct-table">
-                        <tr class="correct-table-headings">
-                            <th class="tbl-data">Word</th>
-                            <th class="tbl-data">Score</th>
-                        </tr>
-                        <tr ng-repeat="data in correctData" class="correct-row" id="{{ data.id }}">
-                            <td class="correct tbl-data">{{ data.word }}</td>
-                            <td class="score tbl-data">{{ data.score }} pts</td>
-                        </tr>
-                    </table>
-                    
-                </div>
-                <div class="end-display-row" id="incorrect-words">
-                    <h1>Incorrect Words</h1>
-                    
-                    <table class="word-table" id="incorrect-table">
-                        <tr class="incorrect-table-headings">
-                            <th class="tbl-data-left">Word</th>
-                        </tr>
-                        <tr ng-repeat="data in incorrectData" class="incorrect-row" id="data.id">
-                            <td class="incorrect tbl-data-left">{{ data.word }}</td>
-                        </tr>
-                    </table>
-                    
-                </div>
-            </div>
-                
+        <div id="suggestion-box">
+          <span>Here's another word that fits the conditions: </span>
+          <a class="suggestion" target="_blank" ng-href="{{ suggLink }}">"{{ suggestion }}"</a>
+         </div>
+      </div>
+      <div layout="row">
+        <div class="end-display-row" id="correct-words">
+          <h1>Correct Words</h1>
+
+          <table class="word-table" id="correct-table">
+            <tr class="correct-table-headings">
+              <th class="tbl-data">Word</th>
+              <th class="tbl-data">Score</th>
+            </tr>
+            <tr ng-repeat="data in correctData" class="correct-row" id="{{ data.id }}">
+              <td class="correct tbl-data">{{ data.word }}</td>
+              <td class="score tbl-data">{{ data.score }} pts</td>
+            </tr>
+          </table>
+
         </div>
-    </body>
+        <div class="end-display-row" id="incorrect-words">
+          <h1>Incorrect Words</h1>
+
+          <table class="word-table" id="incorrect-table">
+            <tr class="incorrect-table-headings">
+              <th class="tbl-data-left">Word</th>
+            </tr>
+            <tr ng-repeat="data in incorrectData" class="incorrect-row" id="data.id">
+              <td class="incorrect tbl-data-left">{{ data.word }}</td>
+            </tr>
+          </table>
+
+        </div>
+      </div>
+
+    </div>
+  </body>
 </html>
