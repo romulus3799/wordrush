@@ -68,6 +68,7 @@
 
         $scope.score = 0
         let scores = []
+		$scope.bestWord = {}
 
         $scope.suggestion = ''
         $scope.suggLink = ''
@@ -106,7 +107,6 @@
 
             console.log('game reset')
         }
-
         $scope.startGame = () => {
             $scope.gameOn = true
             $scope.virgin = false
@@ -167,6 +167,8 @@
         }
 
         function generateResults() {
+
+			//generate correct word data
             for(let i = 0; i < correctWords.length; i++) {
                 $scope.correctData.push({
                     word    : correctWords[i].toUpperCase(),
@@ -174,9 +176,14 @@
                     id        : 'correct-data-'+i
                 })
             }
+			//sort correct words by descending score
 			$scope.correctData.sort((a, b) => {
-		    	return parseFloat(a.price) - parseFloat(b.price);
+		    	return parseFloat(b.score) - parseFloat(a.score);
 			});
+			//get best word
+			$scope.bestWord = $scope.correctData[0]
+
+			//sort incorrect words by ascending alphabet
             for(let i = 0; i < incorrectWords.length; i++) {
                 $scope.incorrectData.push({
                     word    : incorrectWords[i].toUpperCase(),
@@ -184,7 +191,7 @@
                 })
             }
 			$scope.incorrectData.sort((a, b) => {
-		    	return parseFloat(a.price) - parseFloat(b.price);
+		    	return a.word - b.word;
 			});
         }
 
