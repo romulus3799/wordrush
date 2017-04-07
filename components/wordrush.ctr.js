@@ -36,45 +36,81 @@
             $scope.letters = String(letters.data).split(',')
         })
 
-        $scope.gameOn = false
-        $scope.virgin = true
+		const TIMESTART = 60.00
+		const TIMEDIV = 10
 
-        $scope.applicant = ''
-        $scope.submittedWords = []
-        let correctWords = []
-        let incorrectWords = []
-        $scope.timer = 0
-        $scope.timerDisplay = ''
-        let promise
-        const TIMESTART = 60.00
-        const TIMEDIV = 10
-        $scope.condition = {
-            name: '',
-            startsAndEnds: false,
-            startsWith: '',
-            endsWith: '',
-            contains: '',
-            length: 1,
-            containsTimes: 0
-        }
-        const SEPARATOR = ', and '
-        let finals = -1
+		const SEPARATOR = ', and '
+		const MINLEN = 3
+		const MAXLEN = 6
 
-        const MINLEN = 3
-        const MAXLEN = 6
+		const MAXTIMES = 3
+		const MINTIMES = 1
 
-        const MINTIMES = 1
-        const MAXTIMES = 3
+		$scope.gameOn = false
+		$scope.virgin = true
 
-        $scope.score = 0
-        let scores = []
-		$scope.bestWord = {}
+		$scope.applicant = ''
+		$scope.submittedWords = []
+		let correctWords = []
+		let incorrectWords = []
+		$scope.timer = 0
+		$scope.timerDisplay = ''
+		let promise
+		$scope.condition = {
+			name: '',
+			startsAndEnds: false,
+			startsWith: '',
+			endsWith: '',
+			contains: '',
+			length: 1,
+			containsTimes: 0
+		}
+		let finals = -1
 
-        $scope.suggestion = ''
-        $scope.suggLink = ''
 
-        $scope.correctData = []
-        $scope.incorrectData = []
+		$scope.score = 0
+		let scores = []
+		$scope.bestWord = { word : '<none>', score : 0}
+
+		$scope.suggestion = ''
+		$scope.suggLink = ''
+
+		$scope.correctData = []
+		$scope.incorrectData = []
+
+		function resetPage() {
+			$scope.gameOn = false
+			$scope.virgin = true
+
+			$scope.applicant = ''
+			$scope.submittedWords = []
+			correctWords = []
+			incorrectWords = []
+			$scope.timer = 0
+			$scope.timerDisplay = ''
+			promise
+			$scope.condition = {
+				name: '',
+				startsAndEnds: false,
+				startsWith: '',
+				endsWith: '',
+				contains: '',
+				length: 1,
+				containsTimes: 0
+			}
+			finals = -1
+
+
+			$scope.score = 0
+			scores = []
+			$scope.bestWord = { word : '<none>', score : 0}
+
+			$scope.suggestion = ''
+			$scope.suggLink = ''
+
+			$scope.correctData = []
+			$scope.incorrectData = []
+		}
 
         $scope.resetGame = () => {
 
@@ -181,7 +217,9 @@
 		    	return parseFloat(b.score) - parseFloat(a.score);
 			});
 			//get best word
-			$scope.bestWord = $scope.correctData[0]
+			$scope.bestWord = $scope.correctData[0] ?
+								$scope.correctData[0] :
+								$scope.bestWord
 
 			//sort incorrect words by ascending alphabet
             for(let i = 0; i < incorrectWords.length; i++) {

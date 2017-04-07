@@ -48,14 +48,19 @@
             </md-content>
         </div>
         <div id="postgame" ng-show="!gameOn && !virgin">
+			<div layout="row" id="post-buttons">
+				<div>
+					<md-button class="heading accent" ng-click="startGame()">Play Again</md-button>
+				</div>
+				<div>
+					<md-button class="md-warn adjacents heading" ng-click="resetPage()">Back to Main Menu</md-button>
+				</div>
+			</div>
              <div layout="row">
-                <div id="general-info">
+             	<div id="general-info">
 
-                    <md-button class="heading accent" ng-click="startGame()">Play Again</md-button>
-                    <md-button class="md-warn light-heading" ng-click="startGame()">Back</md-button>
-
-                    <h1>Total Score: {{ score }} pts</h1>
-                     <table class="table" id="general-table">
+                    <h1 class="head">Total Score: {{ score }} pts</h1>
+                     <table class="table post-table" id="general-table">
                         <tr>
                             <th class="tbl-data">Total Words:</th>
                             <td class="score tbl-data">{{ submittedWords.length }} words</td>
@@ -73,11 +78,11 @@
                     <a class="suggestion" target="_blank" ng-href="{{ suggLink }}">"{{ suggestion }}"</a>
                  </div>
             </div>
-            <div layout="row">
+            <div class="result-tables" layout="row">
                 <div class="end-display-row" id="correct-words">
-                    <h1>Correct Words</h1>
 
-                    <table class="word-table" id="correct-table">
+					<h1>Correct Words</h1>
+                    <table class="word-table post-table" id="correct-table">
                         <tr class="correct-table-headings">
                             <th class="tbl-data">Word</th>
                             <th class="tbl-data">Score</th>
@@ -90,9 +95,9 @@
 
                 </div>
                 <div class="end-display-row" id="incorrect-words">
-                    <h1>Incorrect Words</h1>
 
-                    <table class="word-table" id="incorrect-table">
+					<h1>Incorrect Words</h1>
+                    <table class="word-table post-table" id="incorrect-table">
                         <tr class="incorrect-table-headings">
                             <th class="tbl-data-left">Word</th>
                         </tr>
@@ -100,10 +105,8 @@
                             <td class="incorrect tbl-data-left">{{ data.word }}</td>
                         </tr>
                     </table>
-
                 </div>
             </div>
-
         </div>
     </body>
 </html>

@@ -67,3 +67,17 @@ div.end-display-row {
 .big {
 	font-size: 20pt;
 }
+#postgame {
+	margin-left: 35vw;
+}
+#post-buttons {
+}
+.adjacent {
+	margin-left: 0;
+}
+h1.head {
+	font-size: 32pt;
+}
+.post-table {
+	margin: 0px auto;
+}
