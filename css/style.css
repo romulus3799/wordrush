@@ -2,7 +2,7 @@ body {
     font-family: "FuturaExtended";
     padding-left: 50px;
 }
-td, th {
+.tbl-data {
     padding-right: 20px;
 }
 #pregame {
@@ -14,7 +14,6 @@ td, th {
 }
 #suggestion-box {
     font-family: "Afta Serif";
-    padding: 100px 0px 0px 100px;
 }
 .suggestion {
     font-size: 20pt;
@@ -41,7 +40,7 @@ button.heading {
     font-size: 20pt;
 }
 .correct {
-    color: #4CAF50;
+    color: #AEEA00;
     font-weight: bold;
 }
 .incorrect {
@@ -68,9 +67,7 @@ div.end-display-row {
 	font-size: 20pt;
 }
 #postgame {
-	margin-left: 35vw;
-}
-#post-buttons {
+	text-align: center;
 }
 .adjacent {
 	margin-left: 0;

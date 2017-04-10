@@ -48,7 +48,7 @@
             </md-content>
         </div>
         <div id="postgame" ng-show="!gameOn && !virgin">
-			<div layout="row" id="post-buttons">
+			<div layout="row" id="post-buttons" layout-align="center">
 				<div>
 					<md-button class="heading accent" ng-click="startGame()">Play Again</md-button>
 				</div>
@@ -56,20 +56,20 @@
 					<md-button class="md-warn adjacents heading" ng-click="resetPage()">Back to Main Menu</md-button>
 				</div>
 			</div>
-             <div layout="row">
+            <div>
              	<div id="general-info">
 
                     <h1 class="head">Total Score: {{ score }} pts</h1>
-                     <table class="table post-table" id="general-table">
-                        <tr>
-                            <th class="tbl-data">Total Words:</th>
-                            <td class="score tbl-data">{{ submittedWords.length }} words</td>
-                        </tr>
-                        <tr>
-                            <th class="tbl-data">Correct Words:</th>
-                            <td class="score tbl-data">{{ amtCorrect }} words</td>
-                        </tr>
-                    </table>
+                     <div class="table post-table" id="general-table" layout="row" layout-align="center">
+                        <div layout="column">
+                            <div class="tbl-data">Total Words:</div>
+							<div class="tbl-data">Correct Words:</div>
+                        </div>
+                        <div layout="column">
+							<div class="score tbl-data">{{ submittedWords.length }} words</div>
+                            <div class="score tbl-data">{{ amtCorrect }} words</div>
+                        </div>
+                    </div>
 
 					<p class="big">Best Word: <b>{{ bestWord.word }}</b> - <span class="score">{{ bestWord.score }} pts</span></p>
                 </div>
@@ -78,33 +78,31 @@
                     <a class="suggestion" target="_blank" ng-href="{{ suggLink }}">"{{ suggestion }}"</a>
                  </div>
             </div>
-            <div class="result-tables" layout="row">
+            <div class="result-tables" layout="row" layout-align="center">
                 <div class="end-display-row" id="correct-words">
 
 					<h1>Correct Words</h1>
-                    <table class="word-table post-table" id="correct-table">
-                        <tr class="correct-table-headings">
-                            <th class="tbl-data">Word</th>
-                            <th class="tbl-data">Score</th>
-                        </tr>
-                        <tr ng-repeat="data in correctData" class="correct-row" id="{{ data.id }}">
-                            <td class="correct tbl-data">{{ data.word }}</td>
-                            <td class="score tbl-data">{{ data.score }} pts</td>
-                        </tr>
-                    </table>
+                    <div class="word-table post-table" id="correct-table" layout="row">
+						<div class="correct-row" layout="column">
+						<div class="tbl-data">Word</div>
+							<div ng-repeat="data in correctData" id="correct-word-{{ data.id }}" class="correct tbl-data">{{ data.word }}</div><br>
+						</div>
+						<div class="correct-table-headings" layout="column">
+						<div class="tbl-data">Score</div>
+							<div ng-repeat="data in correctData" id="correct-score-{{ data.id }}" class="score tbl-data">{{ data.score }} pts</div>
+                        </div>
+                    </div>
 
                 </div>
                 <div class="end-display-row" id="incorrect-words">
 
 					<h1>Incorrect Words</h1>
-                    <table class="word-table post-table" id="incorrect-table">
-                        <tr class="incorrect-table-headings">
-                            <th class="tbl-data-left">Word</th>
-                        </tr>
-                        <tr ng-repeat="data in incorrectData" class="incorrect-row" id="data.id">
-                            <td class="incorrect tbl-data-left">{{ data.word }}</td>
-                        </tr>
-                    </table>
+                    <div class="word-table post-table" id="incorrect-table" layout="row">
+						<div class="incorrect-row" layout="column">
+                        <div class="tbl-data-left">Word</div>
+                            <div ng-repeat="data in incorrectData"  id="incorrect-word-{{ data.id }}" class="incorrect tbl-data-left">{{ data.word }}</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
