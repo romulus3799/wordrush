@@ -36,7 +36,7 @@
                     placeholder="Word"
                     ng-model="applicant"
                     maxlength="30"
-                    ng-keydown="submitWord(applicant)"
+                    ng-keyup="submitWord(applicant)"
                     md-autofocus
                 />
 
@@ -53,7 +53,7 @@
 					<md-button class="heading accent" ng-click="startGame()">Play Again</md-button>
 				</div>
 				<div>
-					<md-button class="md-warn adjacents heading" ng-click="resetPage()">Back to Main Menu</md-button>
+					<md-button class="md-warn adjacents heading" onclick="window.location.reload()">Back to Main Menu</md-button>
 				</div>
 			</div>
             <div>
@@ -74,7 +74,7 @@
 					<p class="big">Best Word: <b>{{ bestWord.word }}</b> - <span class="score">{{ bestWord.score }} pts</span></p>
                 </div>
                 <div id="suggestion-box">
-                    <span>Here's another word that fits the conditions: </span>
+                    <span>Here's another word that {{ condition.name.substring(starter.length).replace('start','starts').replace('contain','contains').replace('end', 'ends') }}: </span>
                     <a class="suggestion" target="_blank" ng-href="{{ suggLink }}">"{{ suggestion }}"</a>
                  </div>
             </div>
@@ -85,7 +85,9 @@
                     <div class="word-table post-table" id="correct-table" layout="row">
 						<div class="correct-row" layout="column">
 						<div class="tbl-data">Word</div>
-							<div ng-repeat="data in correctData" id="correct-word-{{ data.id }}" class="correct tbl-data">{{ data.word }}</div><br>
+							<div ng-repeat="data in correctData" id="correct-word-{{ data.id }}" class="tbl-data">
+								 <a class="correct" target="_blank" ng-href="{{ data.link }}">{{ data.word }}</a>
+							 </div><br>
 						</div>
 						<div class="correct-table-headings" layout="column">
 						<div class="tbl-data">Score</div>

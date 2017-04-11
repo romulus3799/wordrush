@@ -39,6 +39,7 @@
 		const TIMESTART = 60.00
 		const TIMEDIV = 10
 
+		$scope.starter = 'words that '
 		const SEPARATOR = ', and '
 		const MINLEN = 3
 		const MAXLEN = 6
@@ -70,7 +71,7 @@
 
 		$scope.score = 0
 		let scores = []
-		$scope.bestWord = { word : '<none>', score : 0}
+		$scope.bestWord = { word : '<none>', score : 0 }
 
 		$scope.suggestion = ''
 		$scope.suggLink = ''
@@ -111,7 +112,6 @@
 			$scope.correctData = []
 			$scope.incorrectData = []
 		}
-
         $scope.resetGame = () => {
 
             $scope.applicant = ''
@@ -174,6 +174,143 @@
             }
         }
 
+		//in-game
+		function generateCondition() {
+			$scope.condition.startsAndEnds = Math.random() >= .5
+
+			if($scope.condition.startsAndEnds) {
+				let cap = randElement($scope.capPhrases)
+				$scope.condition.startsWith = randElement(cap[0])
+				$scope.condition.endsWith = randElement(cap[1])
+			} else {
+				$scope.condition.startsWith = randElement($scope.startPhrases)
+				$scope.condition.endsWith = randElement($scope.endPhrases)
+			}
+
+			$scope.condition.contains = randElement($scope.inPhrases)
+			$scope.condition.length = randIn(MINLEN, MAXLEN)
+			$scope.condition.containsTimes = randIn(MINTIMES, MAXTIMES)
+
+			$scope.condition.name = $scope.starter
+
+			let lower = 0
+			let upper = 2
+			if($scope.condition.startsAndEnds) {
+				$scope.condition.name +=
+				'start with "' + $scope.condition.startsWith +
+				'" and end with "' + $scope.condition.endsWith + '"'
+			} else {
+
+				for(let i = 0; i < 2; i++) {
+
+					//randomly pick type of condition
+					let temp = finals
+					finals = randIn(lower,upper)
+
+					lower = 3
+					upper = 3
+
+					//add condition description to name
+					$scope.condition.name +=
+					(finals === 0) ?
+					'start with "' + $scope.condition.startsWith + '"' :
+					(finals === 1) ?
+					'end with "' + $scope.condition.endsWith + '"' :
+					(finals === 2) ?
+					'contain "' + $scope.condition.contains + '"' :
+					//
+					' contain at least ' + $scope.condition.length + ' letters'
+
+					$scope.condition.name += SEPARATOR
+					if(i === 1) finals = temp
+					console.log('finals = ' + finals)
+				}
+				//delete separator from end
+				$scope.condition.name = $scope.condition.name.substring(0, $scope.condition.name.length-SEPARATOR.length)
+			}
+		}
+
+		$scope.meetsConditions = word => {
+
+			let checked = false
+
+			if($scope.condition.startsAndEnds) {
+				checked = word.startsWith($scope.condition.startsWith) &&
+				word.endsWith($scope.condition.endsWith)
+			} else {
+				checked =
+				(finals === 0) ?
+				word.startsWith($scope.condition.startsWith) :
+				(finals === 1) ?
+				word.endsWith($scope.condition.endsWith) :
+				//finals === 2
+				word.includes($scope.condition.contains)
+				checked = checked && (word.length >= $scope.condition.length)
+			}
+
+			//console.log(word + ': checked = ' + checked)
+			//console.log(word + ': is word = ' + isWord(word))
+
+			return    checked && isWord(word)
+		}
+
+		$scope.submitWord = word => {
+			//on enter or spacebar
+			if(event.keyCode == (13) || event.keyCode == (32)) {
+				word = word.toLowerCase()
+
+				//check if word has already been submitted
+				let used = $.inArray(word, $scope.submittedWords) !== -1
+				console.log(word + ': used = ' + used)
+
+				$('#word-input').val('')
+
+				console.log('Submitted ' + word)
+
+				//if word is correct
+				if($scope.meetsConditions(word) && !used) {
+					$scope.submittedWords.push(word)
+					correctWords.push(word)
+					$('.in-game-word-display-title').after('<p class="correct dynamic">'+word.toUpperCase()+'</p>')
+
+					//if word is incorrect
+				} else if(!used) {
+					$scope.submittedWords.push(word)
+					incorrectWords.push(word)
+					$('.in-game-word-display-title').after('<p class="incorrect dynamic">'+word.toUpperCase()+'</p>')
+
+					//if word has been entered already
+				} else {
+					$('.in-game-word-display-title').after('<p class="used dynamic">'+word.toUpperCase()+'</p>')
+				}
+			} else if(event.keyCode == (38) || event.keyCode == (40)) {
+				$('#word-input').val($scope.submittedWords[$scope.submittedWords.length-1])
+			}
+			$('#word-input').val($('#word-input').val().toUpperCase())
+		}
+
+		function suggestWord() {
+
+			//create array of every word that meets condition
+			let goodWords = []
+			for(let i = 0; i < $scope.words.length; i++) {
+				let w = $scope.words[i]
+				if($scope.meetsConditions(w)) {
+					goodWords.push(w)
+				}
+			}
+			console.log('Amount of ' + $scope.condition.name + ': ' + goodWords.length)
+
+			do {
+				$scope.suggestion = randElement(goodWords)
+			} while (isIn($scope.suggestion, $scope.submittedWords))
+
+			$scope.suggLink = 'http://www.dictionary.com/browse/' + $scope.suggestion
+
+			console.log('Suggestion: ' + $scope.suggestion)
+		}
+
+		//post-game
         function calculateScore() {
             for (let w = 0; w < correctWords.length; w++) {
                 let chars = correctWords[w].split('')
@@ -208,8 +345,9 @@
             for(let i = 0; i < correctWords.length; i++) {
                 $scope.correctData.push({
                     word    : correctWords[i].toUpperCase(),
-                    score     : scores[i],
-                    id        : 'correct-data-'+i
+                    score   : scores[i],
+                    id      : 'correct-data-'+i,
+					link	: 'http://www.dictionary.com/browse/' + correctWords[i].toLowerCase()
                 })
             }
 			//sort correct words by descending score
@@ -281,141 +419,7 @@
             return false
         }
 
-        function generateCondition() {
-            $scope.condition.startsAndEnds = Math.random() >= .5
-
-            if($scope.condition.startsAndEnds) {
-                let cap = randElement($scope.capPhrases)
-                $scope.condition.startsWith = randElement(cap[0])
-                $scope.condition.endsWith = randElement(cap[1])
-            } else {
-                $scope.condition.startsWith = randElement($scope.startPhrases)
-                $scope.condition.endsWith = randElement($scope.endPhrases)
-            }
-
-            $scope.condition.contains = randElement($scope.inPhrases)
-            $scope.condition.length = randIn(MINLEN, MAXLEN)
-            $scope.condition.containsTimes = randIn(MINTIMES, MAXTIMES)
-
-            $scope.condition.name = 'words that '
-
-            let lower = 0
-            let upper = 2
-            if($scope.condition.startsAndEnds) {
-                $scope.condition.name +=
-                    'start with "' + $scope.condition.startsWith +
-                    '" and end with "' + $scope.condition.endsWith + '"'
-            } else {
-
-                for(let i = 0; i < 2; i++) {
-
-                    //randomly pick type of condition
-                    let temp = finals
-                    finals = randIn(lower,upper)
-
-                    lower = 3
-                    upper = 3
-
-                    //add condition description to name
-                    $scope.condition.name +=
-                        (finals === 0) ?
-                            'start with "' + $scope.condition.startsWith + '"' :
-                        (finals === 1) ?
-                            'end with "' + $scope.condition.endsWith + '"' :
-                        (finals === 2) ?
-                            'contain "' + $scope.condition.contains + '"' :
-                        //
-                            ' contain at least ' + $scope.condition.length + ' letters'
-
-                    $scope.condition.name += SEPARATOR
-                    if(i === 1) finals = temp
-                    console.log('finals = ' + finals)
-                }
-                //delete separator from end
-                $scope.condition.name = $scope.condition.name.substring(0, $scope.condition.name.length-SEPARATOR.length)
-            }
-        }
-
-        $scope.meetsConditions = word => {
-
-            let checked = false
-
-            if($scope.condition.startsAndEnds) {
-                checked = word.startsWith($scope.condition.startsWith) &&
-                    word.endsWith($scope.condition.endsWith)
-            } else {
-                checked =
-                    (finals === 0) ?
-                        word.startsWith($scope.condition.startsWith) :
-                    (finals === 1) ?
-                        word.endsWith($scope.condition.endsWith) :
-                    //finals === 2
-                        word.includes($scope.condition.contains)
-                checked = checked && (word.length >= $scope.condition.length)
-            }
-
-            //console.log(word + ': checked = ' + checked)
-            //console.log(word + ': is word = ' + isWord(word))
-
-            return    checked && isWord(word)
-        }
-
-        $scope.submitWord = word => {
-            //on enter or spacebar
-            if(event.keyCode == (13) || event.keyCode == (32)) {
-                word = word.toLowerCase()
-
-                //check if word has already been submitted
-                let used = $.inArray(word, $scope.submittedWords) !== -1
-                console.log(word + ': used = ' + used)
-
-                $('#word-input').val('')
-
-                console.log('Submitted ' + word)
-
-                //if word is correct
-                if($scope.meetsConditions(word) && !used) {
-                    $scope.submittedWords.push(word)
-                    correctWords.push(word)
-                    $('.in-game-word-display-title').after('<p class="correct dynamic">'+word.toUpperCase()+'</p>')
-
-                //if word is incorrect
-                } else if(!used) {
-                    $scope.submittedWords.push(word)
-                    incorrectWords.push(word)
-                    $('.in-game-word-display-title').after('<p class="incorrect dynamic">'+word.toUpperCase()+'</p>')
-
-                //if word has been entered already
-                } else {
-                    $('.in-game-word-display-title').after('<p class="used dynamic">'+word.toUpperCase()+'</p>')
-                }
-            } else if(event.keyCode == (38) || event.keyCode == (40)) {
-                $('#word-input').val($scope.submittedWords[$scope.submittedWords.length-1])
-            }
-        }
-
-        function suggestWord() {
-
-            //create array of every word that meets condition
-            let goodWords = []
-            for(let i = 0; i < $scope.words.length; i++) {
-                let w = $scope.words[i]
-                if($scope.meetsConditions(w)) {
-                    goodWords.push(w)
-                }
-            }
-            console.log('Amount of ' + $scope.condition.name + ': ' + goodWords.length)
-
-            do {
-                $scope.suggestion = randElement(goodWords)
-            } while (isIn($scope.suggestion, $scope.submittedWords))
-
-            $scope.suggLink = 'http://www.dictionary.com/browse/' + $scope.suggestion
-
-            console.log('Suggestion: ' + $scope.suggestion)
-        }
-
-        //minor helper functions
+        //helper functions
         function randElement(arr) {
             let index = Math.floor(Math.random() * arr.length)
             return arr[index]

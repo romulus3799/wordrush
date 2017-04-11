@@ -28,23 +28,24 @@ button.heading {
     font-size: 32pt;
     padding: 20px;
 }
-.accent {
-    color: #AEEA00;
+.accent, .correct {
+    color: #50e908;
 }
 #word-input {
     font-family: "FuturaExtended";
     font-size: 48pt;
     padding: 12px;
+	text-transform: uppercase;
+	text-transform: full-width;
 }
 .dynamic {
     font-size: 20pt;
 }
 .correct {
-    color: #AEEA00;
     font-weight: bold;
 }
 .incorrect {
-    color: #E64A19;
+    color: #FF5722;
     font-weight: bold;
 }
 .used {
@@ -62,6 +63,9 @@ button.heading {
 }
 div.end-display-row {
     padding: 20px;
+}
+.incorrect-row {
+	text-align: center;
 }
 .big {
 	font-size: 20pt;
