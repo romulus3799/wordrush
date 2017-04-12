@@ -12,7 +12,7 @@
             $scope.letterValues = data.data
             console.log($scope.letterValues)
             console.log('Read letter values')
-        });
+        })
         wordRushFac.getStartPhrases().then(phrases => {
             $scope.startPhrases = String(phrases.data).split(',')
             console.log('Read start phrases')
@@ -180,14 +180,14 @@
 
 			if($scope.condition.startsAndEnds) {
 				let cap = randElement($scope.capPhrases)
-				$scope.condition.startsWith = randElement(cap[0])
-				$scope.condition.endsWith = randElement(cap[1])
+				$scope.condition.startsWith = randElement(cap[0]).toUpperCase()
+				$scope.condition.endsWith = randElement(cap[1]).toUpperCase()
 			} else {
-				$scope.condition.startsWith = randElement($scope.startPhrases)
-				$scope.condition.endsWith = randElement($scope.endPhrases)
+				$scope.condition.startsWith = randElement($scope.startPhrases).toUpperCase()
+				$scope.condition.endsWith = randElement($scope.endPhrases).toUpperCase()
 			}
 
-			$scope.condition.contains = randElement($scope.inPhrases)
+			$scope.condition.contains = randElement($scope.inPhrases).toUpperCase()
 			$scope.condition.length = randIn(MINLEN, MAXLEN)
 			$scope.condition.containsTimes = randIn(MINTIMES, MAXTIMES)
 
@@ -233,7 +233,7 @@
 		$scope.meetsConditions = word => {
 
 			let checked = false
-
+			word = word.toUpperCase()
 			if($scope.condition.startsAndEnds) {
 				checked = word.startsWith($scope.condition.startsWith) &&
 				word.endsWith($scope.condition.endsWith)
@@ -251,13 +251,37 @@
 			//console.log(word + ': checked = ' + checked)
 			//console.log(word + ': is word = ' + isWord(word))
 
-			return    checked && isWord(word)
+			return checked && isWord(word)
 		}
+
+		function isWord(element) {
+			element = element.toLowerCase()
+            let minIndex = 0
+            let maxIndex = $scope.words.length - 1
+            let currentIndex
+            let currentElement
+
+            while (minIndex <= maxIndex) {
+                currentIndex = (minIndex + maxIndex) / 2 | 0
+                currentElement = $scope.words[currentIndex]
+
+                if (currentElement < element) {
+                    minIndex = currentIndex + 1
+                }
+                else if (currentElement > element) {
+                    maxIndex = currentIndex - 1
+                }
+                else {
+                    return true
+                }
+            }
+            return false
+        }
 
 		$scope.submitWord = word => {
 			//on enter or spacebar
 			if(event.keyCode == (13) || event.keyCode == (32)) {
-				word = word.toLowerCase()
+				word = word.toUpperCase()
 
 				//check if word has already been submitted
 				let used = $.inArray(word, $scope.submittedWords) !== -1
@@ -312,6 +336,7 @@
 
 		//post-game
         function calculateScore() {
+			console.log('Calculcating score')
             for (let w = 0; w < correctWords.length; w++) {
                 let chars = correctWords[w].split('')
                 let wordScore = 0
@@ -321,10 +346,11 @@
                     //console.log(chars[l] + ':' + charScore)
                     wordScore += charScore
                 }
-
+				console.log(wordScore)
                 scores.push(wordScore)
             }
-            $scope.score = scores.reduce((a,b)=>{return a+b}, 0);
+			//sort scores by descending
+            $scope.score = scores.reduce((a,b)=>{return a+b}, 0)
         }
 
         $scope.endGame = () => {
@@ -352,8 +378,8 @@
             }
 			//sort correct words by descending score
 			$scope.correctData.sort((a, b) => {
-		    	return parseFloat(b.score) - parseFloat(a.score);
-			});
+		    	return parseFloat(b.score) - parseFloat(a.score)
+			})
 			//get best word
 			$scope.bestWord = $scope.correctData[0] ?
 								$scope.correctData[0] :
@@ -368,32 +394,9 @@
             }
 			$scope.incorrectData.sort((a, b) => {
 		    	return a.word - b.word;
-			});
+			})
         }
 
-        function isWord(element) {
-
-            let minIndex = 0
-            let maxIndex = $scope.words.length - 1
-            let currentIndex
-            let currentElement
-
-            while (minIndex <= maxIndex) {
-                currentIndex = (minIndex + maxIndex) / 2 | 0
-                currentElement = $scope.words[currentIndex]
-
-                if (currentElement < element) {
-                    minIndex = currentIndex + 1
-                }
-                else if (currentElement > element) {
-                    maxIndex = currentIndex - 1
-                }
-                else {
-                    return true
-                }
-            }
-            return false
-        }
 
         function isIn(element, arr) {
 
@@ -430,21 +433,21 @@
         }
 
         function createCORSRequest(method, url) {
-            var xhr = new XMLHttpRequest();
+            var xhr = new XMLHttpRequest()
 
             if ("withCredentials" in xhr) {
                 // Check if the XMLHttpRequest object has a "withCredentials" property.
                 // "withCredentials" only exists on XMLHTTPRequest2 objects.
                 console.log('Request with credentials')
-                xhr.open(method, url, true);
+                xhr.open(method, url, true)
             }
 
             else if (typeof XDomainRequest != "undefined") {
                 // Otherwise, check if XDomainRequest.
                 // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
                 console.log('Request with XDomainRequest')
-                xhr = new XDomainRequest();
-                xhr.open(method, url);
+                xhr = new XDomainRequest()
+                xhr.open(method, url)
             }
 
             else {

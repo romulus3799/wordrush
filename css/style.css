@@ -12,6 +12,9 @@ body {
 	font-family: "Afta Serif";
 	font-size: 90pt;
 }
+#ingame {
+	text-align: center;
+}
 #suggestion-box {
     font-family: "Afta Serif";
 }

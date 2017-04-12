@@ -25,7 +25,7 @@
 				<p>The FitnessGram Pacer Test is a multistage aerobic capacity test that progressively gets more difficult as it continues. The 20 meter pacer test will begin in 30 seconds. Line up at the start. The running speed starts slowly, but gets faster each minute after you hear this signal. [beep] A single lap should be completed each time you hear this sound. [ding] Remember to run in a straight line and run as long possible. The second time you fail to complete a lap before the sound. Your test will begin on the word start. On your mark, get ready, start!</p>
 			</div>
         </div>
-        <div id="interface" ng-show="gameOn && !virgin">
+        <div id="ingame" ng-show="gameOn && !virgin">
             <md-content class="md-padding">
                 <h3 id="timer-display">{{ timerDisplay }}s left</h3>
                 <h1>{{ condition.name }}</h1>
@@ -94,7 +94,6 @@
 							<div ng-repeat="data in correctData" id="correct-score-{{ data.id }}" class="score tbl-data">{{ data.score }} pts</div>
                         </div>
                     </div>
-
                 </div>
                 <div class="end-display-row" id="incorrect-words">
 
