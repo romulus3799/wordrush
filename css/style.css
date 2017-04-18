@@ -8,6 +8,10 @@ body {
 #pregame {
 	text-align: center;
 }
+#instructions {
+	padding: 0px 10vw;
+	font-size: 20pt;
+}
 .title-head {
 	font-family: "Afta Serif";
 	font-size: 90pt;

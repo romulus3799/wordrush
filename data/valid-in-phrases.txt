@@ -1,1 +1,0 @@
-a,ab,ac,al,am,an,ap,ar,as,at,b,bl,c,ca,ce,ch,ci,co,ct,d,de,di,e,ea,ec,ed,el,em,en,er,es,et,f,g,ge,h,ha,he,hi,ho,i,ia,ic,id,ie,il,in,io,is,it,k,l,la,le,li,ll,lo,ly,m,ma,me,mi,mo,n,na,nc,nd,ne,ng,ni,no,ns,nt,o,oc,og,ol,om,on,op,or,os,ot,ou,p,pa,pe,ph,po,pr,r,ra,re,ri,ro,rs,s,se,sh,si,ss,st,su,t,ta,te,th,ti,to,tr,u,ul,un,ur,us,v,ve,w,x,y,z

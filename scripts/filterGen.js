@@ -3,13 +3,23 @@ const jsonfile = require('jsonfile')
 
 function generateFilter(inData, outData, filtData, cond) {
     var phrases = []
+	var easyPhrases = []
     var output = {}
-    var cutoff = (cond === 'endsWith') ? 800 : (cond == 'includes') ? 10000 : 1000
-//read and store possible phrases
+    const MIN_TIES = (cond === 'includes') ? 10000 :
+				  						 	 1000
+	const MAX_TIES = (cond === 'endsWith') ? 5000 :
+				 	 (cond === 'includes') ? 10000 :
+				  						 	 4000
+	//read and store possible phrases
     fs.readFile(inData, (err, data) => {
         if (err) {
             throw err;
         }
+
+		fs.readFile('c:/wordrush/data/easy-end-phrases.txt', (err, data) => {
+			easyPhrases = String(data).toLowerCase().split(',')
+			console.log(easyPhrases)
+		})
 
         //create JSON with occurences for each phrase
         phrases = String(data).toLowerCase().split(',')
@@ -18,10 +28,20 @@ function generateFilter(inData, outData, filtData, cond) {
         }
 
         //for each phrase, count words that start with or include phrase
-        fs.readFile('../data/valid-words.txt', (err, data) => {
+        fs.readFile('c:/wordrush/data/valid-words.txt', (err, data) => {
+
+
             words = String(data).toLowerCase().split(',')
-            for(let i = 0; i < phrases.length; i++) {
-                console.log('Processing ' + phrases[i])
+			//iterate over each phrase
+			for(let i = 0; i < phrases.length; i++) {
+				//if condition is endswith, jump over easy conditions
+
+				if (cond === 'endsWith' && isIn(phrases[i],easyPhrases)) {
+					//console.log('Skipping ' + phrases[i])
+					continue;
+				}
+                //console.log('Processing ' + phrases[i])
+
                 for(let a = 0; a < words.length; a++) {
                         //count word if it contains phrase
                     if(cond === 'includes') {
@@ -39,15 +59,28 @@ function generateFilter(inData, outData, filtData, cond) {
                             output[phrases[i]]++
                         }
                         //count word if the phrase caps it
-                    } else if(cond === 'both') {
+					} else if(cond === 'both12') {
                         //check if phrase is > 1 letter, does not end with an 's', and does not contain 'u' or 'y'
-                        if(phrases[i].length > 1 
-                           && !phrases[i].endsWith('s') 
-                           && !phrases[i].includes('u') 
-                           && !phrases[i].endsWith('y')) {
-                            
+                        if(phrases[i].length > 1
+                           	&& !phrases[i].endsWith('s')
+                           	&& !phrases[i].includes('u')
+                           	&& !phrases[i].endsWith('y')) {
+
                             var st = phrases[i].charAt(0)
-                            var en = phrases[i].charAt(1)
+                            var en = phrases[i].substring(1)
+                            if(words[a].startsWith(st) && words[a].endsWith(en)) {
+                                output[phrases[i]]++
+                            }
+                        }
+                    } else if(cond === 'both21') {
+                        //check if phrase is > 1 letter, does not end with an 's', and does not contain 'u' or 'y'
+                        if(phrases[i].length > 1
+                           	&& !phrases[i].endsWith('s')
+                           	&& !phrases[i].includes('u')
+                           	&& !phrases[i].endsWith('y')) {
+
+                            var st = phrases[i].substring(0,2)
+                            var en = phrases[i].charAt(2)
                             if(words[a].startsWith(st) && words[a].endsWith(en)) {
                                 output[phrases[i]]++
                             }
@@ -62,7 +95,7 @@ function generateFilter(inData, outData, filtData, cond) {
             //store good phrases as phrases with at least 1000 words
             var goodPhrases = ''
             for(let i = 0; i < phrases.length; i++) {
-                if(output[phrases[i]] >= cutoff) {
+                if(output[phrases[i]] >= MIN_TIES && output[phrases[i]] <= MAX_TIES) {
                     goodPhrases += phrases[i] + ','
                 }
             }
@@ -72,26 +105,40 @@ function generateFilter(inData, outData, filtData, cond) {
                 goodPhrases = goodPhrases.substring(0, goodPhrases.length-1)
             }
             fs.writeFileSync(filtData, goodPhrases)
+			console.log('Wrote to ' + filtData)
         })
     })
 }
 
-generateFilter('../data/clean-phrases.txt', 
-               '../data/start-phrase-data.json', 
-               '../data/valid-start-phrases.txt',
+function isIn(e,arr) {
+	for(let i = 0; i < arr.length; i++) {
+		if(arr[i] === e) {
+			return true
+		}
+	}
+	return false
+}
+generateFilter('c:/wordrush/data/dirty-phrases.txt',
+               'c:/wordrush/data/start-phrase-data.json',
+               'c:/wordrush/data/valid-start-phrases.txt',
                'startsWith')
 
-generateFilter('../data/dirty-phrases.txt', 
-               '../data/in-phrase-data.json', 
-               '../data/valid-in-phrases.txt', 
+generateFilter('c:/wordrush/data/dirty-phrases.txt',
+               'c:/wordrush/data/in-phrase-data.json',
+               'c:/wordrush/data/valid-in-phrases.txt',
                'includes')
 
-generateFilter('../data/dirty-phrases.txt', 
-               '../data/end-phrase-data.json', 
-               '../data/valid-end-phrases.txt', 
+generateFilter('c:/wordrush/data/dirty-phrases.txt',
+               'c:/wordrush/data/end-phrase-data.json',
+               'c:/wordrush/data/valid-end-phrases.txt',
                'endsWith')
 
-generateFilter('../data/dirty-phrases.txt', 
-               '../data/cap-phrase-data.json', 
-               '../data/valid-cap-phrases.txt', 
-               'both')
+generateFilter('c:/wordrush/data/dirty-phrases.txt',
+               'c:/wordrush/data/cap12-phrase-data.json',
+               'c:/wordrush/data/valid-cap12-phrases.txt',
+               'both12')
+
+generateFilter('c:/wordrush/data/dirty-phrases.txt',
+              'c:/wordrush/data/cap21-phrase-data.json',
+              'c:/wordrush/data/valid-cap21-phrases.txt',
+              'both21')
