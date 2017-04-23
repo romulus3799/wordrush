@@ -5,10 +5,10 @@ function generateFilter(inData, outData, filtData, cond) {
     var phrases = []
 	var easyPhrases = []
     var output = {}
-    const MIN_TIES = (cond === 'includes') ? 10000 :
+    const MIN_TIES = (cond === 'includes') ? 4000 :
 				  						 	 1000
 	const MAX_TIES = (cond === 'endsWith') ? 5000 :
-				 	 (cond === 'includes') ? 10000 :
+				 	 (cond === 'includes') ? 8000 :
 				  						 	 4000
 	//read and store possible phrases
     fs.readFile(inData, (err, data) => {
@@ -40,7 +40,6 @@ function generateFilter(inData, outData, filtData, cond) {
 					//console.log('Skipping ' + phrases[i])
 					continue;
 				}
-                //console.log('Processing ' + phrases[i])
 
                 for(let a = 0; a < words.length; a++) {
                         //count word if it contains phrase
@@ -118,27 +117,27 @@ function isIn(e,arr) {
 	}
 	return false
 }
-generateFilter('c:/wordrush/data/dirty-phrases.txt',
-               'c:/wordrush/data/start-phrase-data.json',
-               'c:/wordrush/data/valid-start-phrases.txt',
-               'startsWith')
+// generateFilter('c:/wordrush/data/dirty-phrases.txt',
+//                'c:/wordrush/data/start-phrase-data.json',
+//                'c:/wordrush/data/valid-start-phrases.txt',
+//                'startsWith')
 
 generateFilter('c:/wordrush/data/dirty-phrases.txt',
                'c:/wordrush/data/in-phrase-data.json',
                'c:/wordrush/data/valid-in-phrases.txt',
                'includes')
-
-generateFilter('c:/wordrush/data/dirty-phrases.txt',
-               'c:/wordrush/data/end-phrase-data.json',
-               'c:/wordrush/data/valid-end-phrases.txt',
-               'endsWith')
-
-generateFilter('c:/wordrush/data/dirty-phrases.txt',
-               'c:/wordrush/data/cap12-phrase-data.json',
-               'c:/wordrush/data/valid-cap12-phrases.txt',
-               'both12')
-
-generateFilter('c:/wordrush/data/dirty-phrases.txt',
-              'c:/wordrush/data/cap21-phrase-data.json',
-              'c:/wordrush/data/valid-cap21-phrases.txt',
-              'both21')
+//
+// generateFilter('c:/wordrush/data/dirty-phrases.txt',
+//                'c:/wordrush/data/end-phrase-data.json',
+//                'c:/wordrush/data/valid-end-phrases.txt',
+//                'endsWith')
+//
+// generateFilter('c:/wordrush/data/dirty-phrases.txt',
+//                'c:/wordrush/data/cap12-phrase-data.json',
+//                'c:/wordrush/data/valid-cap12-phrases.txt',
+//                'both12')
+//
+// generateFilter('c:/wordrush/data/dirty-phrases.txt',
+//               'c:/wordrush/data/cap21-phrase-data.json',
+//               'c:/wordrush/data/valid-cap21-phrases.txt',
+//               'both21')

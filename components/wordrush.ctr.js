@@ -23,15 +23,27 @@
         wordRushFac.getEndPhrases().then(phrases => {
             $scope.endPhrases = String(phrases.data).split(',')
         })
-        wordRushFac.getCapPhrases().then(phrases => {
+		wordRushFac.getCap12Phrases().then(phrases => {
             let arr = String(phrases.data).split(',')
 
             //split each string into an array of chars
             for(let i = 0; i < arr.length; i++) {
-                arr[i] = [arr[i].charAt(0),arr[i].charAt(1)]
+                arr[i] = [arr[i].charAt(0),arr[i].substring(1)]
             }
-            $scope.capPhrases = arr
+            $scope.cap12Phrases = arr
         })
+		wordRushFac.getCap21Phrases().then(phrases => {
+            let arr = String(phrases.data).split(',')
+
+            //split each string into an array of chars
+            for(let i = 0; i < arr.length; i++) {
+                arr[i] = [arr[i].substring(0,arr[i].length),arr[i].charAt(arr[i].length-1)]
+            }
+            $scope.cap21Phrases = arr
+        })
+		wordRushFac.getEasyPhrases().then((phrases) => {
+			$scope.easyPhrases = String(phrases.data).split(',')
+		})
         wordRushFac.getLetters().then(letters => {
             $scope.letters = String(letters.data).split(',')
         })
@@ -179,9 +191,21 @@
 			$scope.condition.startsAndEnds = Math.random() >= .5
 
 			if($scope.condition.startsAndEnds) {
-				let cap = randElement($scope.capPhrases)
-				$scope.condition.startsWith = randElement(cap[0]).toUpperCase()
-				$scope.condition.endsWith = randElement(cap[1]).toUpperCase()
+				if(Math.random() >= .5) {
+					var cand
+					do {
+						cand = randElement($scope.cap12Phrases)
+						$scope.condition.startsWith = randElement(cand[0]).toUpperCase()
+						$scope.condition.endsWith = randElement(cand[1]).toUpperCase()
+					} while(found(cand,$scope.easyPhrases))
+				} else {
+					var cand
+					do {
+						cand = randElement($scope.cap12Phrases)
+						$scope.condition.startsWith = randElement(cand[0]).toUpperCase()
+						$scope.condition.endsWith = randElement(cand[1]).toUpperCase()
+					} while(found(cand,$scope.easyPhrases))
+				}
 			} else {
 				$scope.condition.startsWith = randElement($scope.startPhrases).toUpperCase()
 				$scope.condition.endsWith = randElement($scope.endPhrases).toUpperCase()
@@ -397,8 +421,8 @@
 			})
         }
 
-
-        function isIn(element, arr) {
+        //helper functions
+		function isIn(element, arr) {
 
             let minIndex = 0
             let maxIndex = arr.length - 1
@@ -422,8 +446,16 @@
             return false
         }
 
-        //helper functions
-        function randElement(arr) {
+		function found(el, arr) {
+			for (var i = 0; i < arr.length; i++) {
+				if(arr[i].includes(el) || el.includes(arr[i]) || el === arr) {
+					return true
+				}
+			}
+			return false
+		}
+
+		function randElement(arr) {
             let index = Math.floor(Math.random() * arr.length)
             return arr[index]
         }
