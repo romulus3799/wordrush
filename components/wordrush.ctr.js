@@ -146,6 +146,7 @@
 
             $scope.score = 0
             scores = []
+			$scope.bestWord = { word : '<none>', score : 0}
 
             $scope.suggestion = ''
             $scope.suggLink = ''

@@ -1,5 +1,5 @@
 body {
-    font-family: "FuturaExtended";
+    font-family: "FuturaExtended", "Century Gothic";
     padding-left: 50px;
 }
 .tbl-data {
@@ -13,25 +13,25 @@ body {
 	font-size: 20pt;
 }
 .title-head {
-	font-family: "Afta Serif";
+	font-family: "Afta Serif", "Century";
 	font-size: 90pt;
 }
 #ingame {
 	text-align: center;
 }
 #suggestion-box {
-    font-family: "Afta Serif";
+    font-family: "Afta Serif", "Century";
 }
 .suggestion {
     font-size: 20pt;
 }
 button.heading {
-    font-family: "FuturaExtended";
+    font-family: "FuturaExtended", "Century Gothic";
     font-size: 32pt;
     padding: 20px;
 }
 .light-heading {
-    font-family: "Futura (Light)";
+    font-family: "Futura (Light)", "Century Gothic";
     font-size: 32pt;
     padding: 20px;
 }
@@ -39,7 +39,7 @@ button.heading {
     color: #50e908;
 }
 #word-input {
-    font-family: "FuturaExtended";
+    font-family: "FuturaExtended", "Century Gothic";
     font-size: 48pt;
     padding: 12px;
 	text-transform: uppercase;
