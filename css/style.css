@@ -15,6 +15,10 @@ body {
 .title-head {
 	font-family: "Afta Serif", "Century";
 	font-size: 90pt;
+	margin-bottom: 20px;
+}
+.title-sub {
+	margin-bottom: 50px;
 }
 #ingame {
 	text-align: center;

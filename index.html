@@ -19,6 +19,7 @@
     <body ng-app="wordrush" ng-controller="wordrushCtrl">
         <div id="pregame" ng-show="!gameOn && virgin">
             <h1 class="title-head">Word Rush</h1>
+			<h4 class="title-sub">A game by Romil Havewala</h4>
             <md-button class="md-primary heading" ng-click="startGame()">Start Game</md-button><br>
             <md-button class="heading" ng-click="showInstructions = !showInstructions">How To Play</md-button>
 			<div id="instructions" ng-show="showInstructions">
@@ -50,7 +51,7 @@
         <div id="postgame" ng-show="!gameOn && !virgin">
 			<div layout="row" id="post-buttons" layout-align="center">
 				<div>
-					<md-button class="heading accent" ng-click="startGame()">Play Again</md-button>
+					<md-button class="heading accent" ng-click="resetGame();startGame()">Play Again</md-button>
 				</div>
 				<div>
 					<md-button class="md-warn adjacents heading" onclick="window.location.reload()">Back to Main Menu</md-button>

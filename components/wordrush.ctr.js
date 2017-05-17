@@ -335,7 +335,6 @@
 			} else if(event.keyCode == (38) || event.keyCode == (40)) {
 				$('#word-input').val($scope.submittedWords[$scope.submittedWords.length-1])
 			}
-			$('#word-input').val($('#word-input').val().toUpperCase())
 		}
 
 		function suggestWord() {
